@@ -1,27 +1,21 @@
 import React, { useState, useEffect } from 'react';
+import { connect } from "umi";
 import { PageContainer } from '@ant-design/pro-layout';
 import { queryRoiReport } from './service';
 import { Chart, Line, Slider } from "bizcharts";
 import { Row, Col, Button, DatePicker, Select, Divider, Spin } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import * as moment from "moment";
-import config from "../../../../config/platformConfig"
 
-const Option = Select.Option;
-let options = [];
-for (let i = 0; i < config.games.length; ++i) {
-  options.push(<Option key={config.games[i].value} value={config.games[i].value}>{config.games[i].name}</Option>)
-}
-
-const OnlineUserGraph = () => {
-  const [appId, setAppId] = useState();
+const OnlineUserGraph = (props) => {
+  let { gameType } = props;
   const [currentDate, setCurrentDate] = useState(moment.utc());
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
 
   async function queryData() {
     let params = {
-      app_id: appId,
+      app_id: gameType,
       current_date: currentDate.format("YYYY-MM-DD")
     }
     setLoading(true);
@@ -32,7 +26,7 @@ const OnlineUserGraph = () => {
 
   useEffect(() => {
     queryData();
-  }, [])
+  }, [gameType])
 
 
   let chart = (<div style={{ textAlign: "center" }}><Spin delay={200} /></div>);
@@ -52,13 +46,7 @@ const OnlineUserGraph = () => {
           <Col span={8}>
             日期：<DatePicker style={{ width: "80%" }} value={currentDate} onChange={setCurrentDate} />
           </Col>
-          <Col span={8}>
-            游戏：
-            <Select onChange={setAppId} value={appId} style={{ width: "80%" }} placeholder="游戏" allowClear>
-              {options}
-            </Select>
-          </Col>
-          <Col span={8} style={{ textAlign: "right" }}>
+          <Col offset={8} span={8} style={{ textAlign: "right" }}>
             <Button type="primary" htmlType="submit" icon={<SearchOutlined />} onClick={queryData}>查询</Button>
           </Col>
         </Row>
@@ -70,4 +58,6 @@ const OnlineUserGraph = () => {
   </PageContainer>)
 };
 
-export default OnlineUserGraph;
+export default connect(({ global }) => ({
+  gameType: global.gameType
+}))(OnlineUserGraph);

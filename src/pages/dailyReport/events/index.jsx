@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { PageContainer, } from '@ant-design/pro-layout';
 import { connect } from "umi";
 import { queryRoiReport } from './service';
-import { Row, Col, Button, DatePicker, Select, Divider, Spin, Table } from 'antd';
+import { Row, Col, Button, DatePicker, Select, Divider, Table } from 'antd';
 import * as moment from "moment";
 import { SearchOutlined } from '@ant-design/icons';
 import config from "../../../../config/platformConfig";
@@ -16,7 +16,7 @@ for (let i = 0; i < config.games.length; ++i) {
 }
 
 const TableList = (props) => {
-  let { gameType, dispatch } = props;
+  let { gameType } = props;
   let [loading, setLoading] = useState(false);
   let [currentDate, setCurrentDate] = useState(moment.utc());
   let [events, setEvents] = useState([]);
@@ -47,7 +47,7 @@ const TableList = (props) => {
 
   useEffect(() => {
     queryData();
-  }, [])
+  }, [gameType])
 
   const columns = [
     { title: "应用内事件", dataIndex: "event_name", key: "event_name" },
@@ -64,13 +64,7 @@ const TableList = (props) => {
             <Col span={8}>
               日期：<DatePicker style={{ width: "80%" }} value={currentDate} onChange={setCurrentDate} />
             </Col>
-            <Col span={8}>
-              游戏：
-            <Select onChange={(gameType) => dispatch({ type: "global/selectGameType", gameType })} value={gameType} style={{ width: "80%" }} allowClear>
-                {options}
-              </Select>
-            </Col>
-            <Col span={8} style={{ textAlign: "right" }}>
+            <Col offset={8} span={8} style={{ textAlign: "right" }}>
               <Button type="primary" htmlType="submit" icon={<SearchOutlined />} onClick={queryData}>查询</Button>
             </Col>
           </Row>

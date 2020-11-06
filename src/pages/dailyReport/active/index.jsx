@@ -1,56 +1,24 @@
 import { Drawer } from 'antd';
-import React, { useState, useRef } from 'react';
+import { connect } from "umi";
+import React, { useState, useRef, useEffect } from 'react';
 import { PageContainer, } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
 import ProDescriptions from '@ant-design/pro-descriptions';
 import { queryRoiReport } from './service';
 
-const TableList = () => {
-  let lastItemKey = [];
+const TableList = (props) => {
+  let { gameType } = props;
   const actionRef = useRef();
   const [collapsed, setCollapsed] = useState(false);
   const [row, setRow] = useState();
   const columns = [
     {
-      title: '游戏',
-      dataIndex: 'app_id',
-      hideInTable: true,
-      valueEnum: {
-        'com.gamemasterf9.plinkomania#android': {
-          text: 'plinkomania#安卓',
-        },
-        'com.gamemasterf9.arcadepusher#android': {
-          text: 'arcadepusher#安卓',
-        },
-        'com.gamemasterf9.plinkogo#android': {
-          text: 'plinkoGo#安卓'
-        },
-        'id1525191968#ios': {
-          text: 'plinkomania#ios',
-        },
-        'id1525192056#ios': {
-          text: 'plinkoGo#ios'
-        },
-        'id1525191759#ios': {
-          text: 'pusher#ios',
-        },
-        'com.gamemasterf9.pushermaster#android': {
-          text: 'pusher#android'
-        },
-      },
-    },
-    {
-      title: '游戏',
-      dataIndex: 'app_name',
-      search: false,
-      render: (dom, entity) => {
-        return <a onClick={() => setRow(entity)}>{dom}</a>;
-      },
-    },
-    {
       title: '日期',
       dataIndex: 'current_date',
       valueType: 'date',
+      render: (dom, entity) => {
+        return <a onClick={() => setRow(entity)}>{dom}</a>;
+      },
     },
     {
       title: '日活人数',
@@ -96,12 +64,16 @@ const TableList = () => {
 
   const dealResponseData = (data) => {
     if (data) {
-      lastItemKey[data.current] = data.lastEvaluatedKey;
       return Array.isArray(data.records) ? data.records : [];
     } else {
       return [];
     }
   }
+
+  useEffect(() => {
+    actionRef.current.reload();
+  }, [gameType]);
+
   return (
     <PageContainer>
       <ProTable
@@ -116,7 +88,7 @@ const TableList = () => {
         actionRef={actionRef}
         rowKey="key"
         postData={dealResponseData}
-        request={(params, sort, filter) => queryRoiReport({ lastItemKey: lastItemKey[params.current - 1], ...params, ...sort, ...filter })}
+        request={(params, sort, filter) => queryRoiReport({ app_id: gameType, ...params, ...sort, ...filter })}
         columns={columns}
       />
       <Drawer
@@ -145,4 +117,6 @@ const TableList = () => {
   );
 };
 
-export default TableList;
+export default connect(({ global }) => ({
+  gameType: global.gameType
+}))(TableList);

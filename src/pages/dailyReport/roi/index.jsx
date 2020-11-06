@@ -1,27 +1,19 @@
 import { Drawer } from 'antd';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { PageContainer, } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
+import { connect } from "umi";
 import ProDescriptions from '@ant-design/pro-descriptions';
 import { queryRoiReport } from './service';
-import config from "../../../../config/platformConfig"
+import { useEffect } from 'react';
 
-const TableList = () => {
+const TableList = (props) => {
+  let { gameType } = props;
+  const actionRef = useRef();
   const [collapsed, setCollapsed] = useState(false);
   const [row, setRow] = useState();
-  let valueEnum = {};
-  for (let i = 0; i < config.games.length; ++i) {
-    valueEnum[config.games[i].value] = {
-      text: config.games[i].name
-    }
-  }
+
   const columns = [
-    {
-      title: '游戏',
-      dataIndex: 'app_id',
-      hideInTable: true,
-      valueEnum,
-    },
     {
       title: '日期',
       dataIndex: 'current_date',
@@ -82,6 +74,12 @@ const TableList = () => {
     }
   ];
 
+  useEffect(() => {
+    actionRef.current.reload()
+  }, [gameType])
+
+
+
   const dealResponseData = (data) => {
     if (data && Array.isArray(data.records) && data.records.length > 0) {
       return data.records;
@@ -126,8 +124,8 @@ const TableList = () => {
   return (
     <PageContainer>
       <ProTable
+        actionRef={actionRef}
         expandable={{ expandedRowRender }}
-        manualRequest={true}
         pagination={{
           simple: true,
           pageSize: 10
@@ -139,7 +137,7 @@ const TableList = () => {
         headerTitle="ROI日报"
         rowKey="key"
         postData={dealResponseData}
-        request={(params, sort, filter) => queryRoiReport({ ...params, ...sort, ...filter })}
+        request={(params, sort, filter) => queryRoiReport({ app_id: gameType, ...params, ...sort, ...filter })}
         columns={columns}
       />
       <Drawer
@@ -168,4 +166,6 @@ const TableList = () => {
   );
 };
 
-export default TableList;
+export default connect(({ global }) => ({
+  gameType: global.gameType
+}))(TableList);
