@@ -4,7 +4,7 @@ const proSettings = {
   primaryColor: '#1890ff',
   layout: 'side',
   contentWidth: 'Fluid',
-  fixedHeader: true,
+  fixedHeader: false,
   fixSiderbar: true,
   colorWeak: false,
   menu: {

@@ -56,7 +56,16 @@ const TableList = (props) => {
       title: '买量四留',
       dataIndex: 'non_organic_retention_3',
       search: false,
-    }
+    },
+    {
+      title: '操作',
+      valueType: 'option',
+      render: (text, row, _, action) => [
+        <a href={`#/dailyReport/retention/detail/${row.current_date}`} rel="noopener noreferrer" key="view">
+          详情
+        </a>
+      ],
+    },
   ];
 
   const dealResponseData = (data) => {
@@ -67,29 +76,6 @@ const TableList = (props) => {
     }
   }
 
-  const expandedRowRender = (item) => {
-    const data = [];
-    for (let media_source in item.channel) {
-      data.push({
-        key: media_source,
-        media_source,
-        new_user_count: item.channel[media_source].new_user_count
-      });
-    }
-    return (
-      <ProTable
-        columns={[
-          { title: '渠道', dataIndex: 'media_source' },
-          { title: '新增用户', dataIndex: 'new_user_count' }
-        ]}
-        headerTitle="渠道统计"
-        search={false}
-        options={false}
-        dataSource={data}
-        pagination={false}
-      />
-    );
-  };
   useEffect(() => {
     actionRef.current.reload();
   }, [gameType]);
@@ -98,7 +84,6 @@ const TableList = (props) => {
     <PageContainer>
       <ProTable
         actionRef={actionRef}
-        expandable={{ expandedRowRender }}
         pagination={{
           simple: true,
           pageSize: 10

@@ -64,6 +64,12 @@ export default defineConfig({
                   component: './dailyReport/retention',
                 },
                 {
+                  path: '/dailyReport/retention/detail/:date',
+                  name: '留存详情',
+                  component: './dailyReport/retentionDetail',
+                  hideInMenu: true,
+                },
+                {
                   path: '/dailyReport/events',
                   name: '事件',
                   component: './dailyReport/events',
@@ -75,11 +81,11 @@ export default defineConfig({
               name: '玩家数据',
               icon: 'User',
               routes: [
-                // {
-                //   path: '/userData/userList',
-                //   name: '玩家查询',
-                //   component: './userData/userList',
-                // },
+                {
+                  path: '/userData/userList',
+                  name: '玩家查询',
+                  component: './userData/userList',
+                },
                 {
                   path: '/userData/onlineUserCount',
                   name: '在线统计',
