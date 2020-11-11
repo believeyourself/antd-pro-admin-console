@@ -38,6 +38,11 @@ const TableList = (props) => {
       search: false,
     },
     {
+      title: '自然七留',
+      dataIndex: 'organic_retention_6',
+      search: false,
+    },
+    {
       title: '买量新增',
       dataIndex: 'non_organic_count',
       search: false,
@@ -55,6 +60,11 @@ const TableList = (props) => {
     {
       title: '买量四留',
       dataIndex: 'non_organic_retention_3',
+      search: false,
+    },
+    {
+      title: '买量七留',
+      dataIndex: 'non_organic_retention_6',
       search: false,
     },
     {

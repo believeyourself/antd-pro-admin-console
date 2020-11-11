@@ -43,6 +43,10 @@ const TableList = (props) => {
     {
       title: '四留',
       dataIndex: 'retention_4',
+    },
+    {
+      title: '七留',
+      dataIndex: 'retention_7',
     }
   ];
   for (let i = conditions.length - 1; i >= 0; --i) {
@@ -80,7 +84,7 @@ const TableList = (props) => {
   return (
     <PageContainer>
       <Row style={{ backgroundColor: "#fff", padding: "20px", marginBottom: "20px" }}>
-        <Col span={8}>
+        <Col xs={24} sm={8} md={8} span={8}>
           条件：
           <Select value={conditions} onChange={setConditions} style={{ width: "80%" }} mode="multiple" placeholder="请选择筛选条件" allowClear>
             <Option value="country_code">国家</Option>
@@ -95,10 +99,10 @@ const TableList = (props) => {
             <Option value="carrier">运营商</Option>
           </Select>
         </Col>
-        <Col span={8}>
+        <Col xs={24} sm={8} md={8} span={8}>
           日期：<DatePicker style={{ width: "80%" }} value={currentDate} onChange={setCurrentDate} />
         </Col>
-        <Col span={8} style={{ textAlign: "right" }}>
+        <Col xs={24} sm={8} md={8} span={8} style={{ textAlign: "right" }}>
           <Button loading={loading} onClick={search} icon={<SearchOutlined />} type="primary">查询</Button>
         </Col>
       </Row>
