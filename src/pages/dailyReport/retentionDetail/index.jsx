@@ -1,24 +1,21 @@
 import { connect } from "umi";
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { PageContainer, } from '@ant-design/pro-layout';
 import { queryData } from './service';
 import { SearchOutlined } from '@ant-design/icons';
 import * as moment from "moment";
 import { Table, Select, Row, Col, Button, DatePicker } from "antd";
+import config from "../../../../config/platformConfig";
 const Option = Select.Option;
 
-const CONDITION_LABEL = {
-  country_code: "国家",
-  state: "州/县",
-  media_source: "媒体渠道",
-  device_type: "设备型号",
-  os_version: "设备系统版本",
-  af_cost_model: "成本类型",
-  af_cost_value: "CPI",
-  app_version: "APP版本",
-  af_ad: "广告",
-  carrier: "运营商",
+let options = [];
+let CONDITION_LABEL = {}
+for (let i = 0; i < config.categories.length; ++i) {
+  let category = config.categories[i];
+  CONDITION_LABEL[category.value] = category.name;
+  options.push(<Option key={category.value} value={category.value}>{category.name}</Option>)
 }
+
 
 const TableList = (props) => {
   let { gameType } = props;
@@ -87,16 +84,7 @@ const TableList = (props) => {
         <Col xs={24} sm={8} md={8} span={8}>
           条件：
           <Select value={conditions} onChange={setConditions} style={{ width: "80%" }} mode="multiple" placeholder="请选择筛选条件" allowClear>
-            <Option value="country_code">国家</Option>
-            <Option value="state">州/县</Option>
-            <Option value="media_source">媒体来源</Option>
-            <Option value="device_type">设备型号</Option>
-            <Option value="os_version">设备系统版本</Option>
-            <Option value="af_cost_model">成本类型</Option>
-            <Option value="af_cost_value">CPI</Option>
-            <Option value="app_version">APP版本</Option>
-            <Option value="af_ad">广告</Option>
-            <Option value="carrier">运营商</Option>
+            {options}
           </Select>
         </Col>
         <Col xs={24} sm={8} md={8} span={8}>
