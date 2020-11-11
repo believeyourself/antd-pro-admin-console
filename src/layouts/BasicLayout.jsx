@@ -37,6 +37,7 @@ const menuDataRender = (menuList) =>
 const BasicLayout = (props) => {
   const {
     gameType,
+    collapsed,
     dispatch,
     children,
     settings,
@@ -44,7 +45,6 @@ const BasicLayout = (props) => {
       pathname: '/',
     },
   } = props;
-
 
   const gameSelectRender = () => {
     let options = [];
@@ -55,7 +55,7 @@ const BasicLayout = (props) => {
     return <Select onChange={(gameType) => dispatch({
       type: "global/selectGameType",
       gameType
-    })} value={gameType} placeholder="请选择游戏" style={{ width: "100%" }}>{options}</Select>
+    })} value={gameType} placeholder="请选择游戏" style={{ display: collapsed ? "none" : "block", width: "100%" }}>{options}</Select>
   }
   const menuDataRef = useRef([]);
 

@@ -16,6 +16,14 @@ const GlobalModel = {
     gameTypeChange(state, { gameType }) {
       return { ...state, gameType };
     },
+    changeLayoutCollapsed(
+      state = {
+        collapsed: true,
+      },
+      { payload },
+    ) {
+      return { ...state, collapsed: payload };
+    },
   },
 };
 export default GlobalModel;
