@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { PageContainer, } from '@ant-design/pro-layout';
 import { connect } from "umi";
 import { queryRoiReport } from './service';
-import { Tabs, Button, DatePicker, Select, Table, Form } from 'antd';
+import { BackTop, Tabs, Button, DatePicker, Select, Table, Form } from 'antd';
+import DataSet from '@antv/data-set';
+import { Chart, Interval } from "bizcharts";
 import * as moment from "moment";
 import { SearchOutlined } from '@ant-design/icons';
 import config from "../../../../config/platformConfig";
 import style from "./style.less";
-import { Group } from 'antd/lib/avatar';
 
 const { TabPane } = Tabs;
 const Option = Select.Option;
@@ -23,6 +24,19 @@ const TableList = (props) => {
   let [currentDate, setCurrentDate] = useState(moment.utc());
   let [data, setData] = useState({ events: [], mediaSource: [] });
   let [group, setGroup] = useState("events");
+
+  
+  const ds = new DataSet();
+  const dv = ds
+    .createView()
+    .source(data.events)
+    .transform({
+      type: 'percent',
+      field: 'event_count',
+      dimension: 'media_source',
+      groupBy: ['event_name'],
+      as: 'percent',
+    });
 
   let columns = {
     events: [
@@ -87,7 +101,7 @@ const TableList = (props) => {
 
   return (
     <PageContainer>
-      <Form layout="inline" className={style.search_form}>
+      <Form layout="inline" className={style.content}>
         <Form.Item label="日期">
           <DatePicker value={currentDate} onChange={setCurrentDate} />
         </Form.Item>
@@ -95,7 +109,14 @@ const TableList = (props) => {
           <Button type="primary" htmlType="submit" icon={<SearchOutlined />} onClick={queryData}>查询</Button>
         </Form.Item>
       </Form>
-      <div className={style.search_form}>
+      <div className={style.content}>
+        <h3>事件漏斗</h3>
+        <Chart
+          autoFit height={300} data={dv.rows}>
+          <Interval adjust="stack" color="media_source" position="event_name*event_count" />
+        </Chart>
+      </div>
+      <div className={style.content}>
         <Tabs onChange={group => setGroup(group)} defaultValue="events">
           <TabPane tab="按事件维度分组" key="events" ></TabPane>
           <TabPane tab="按媒体源分组" key="mediaSource"></TabPane>
@@ -103,6 +124,7 @@ const TableList = (props) => {
         <Table loading={loading} bordered pagination={false} dataSource={data[group]} columns={columns[group]}>
         </Table>
       </div>
+      <BackTop />
     </PageContainer >
   );
 };
