@@ -59,6 +59,12 @@ export default defineConfig({
                   component: './dailyReport/active',
                 },
                 {
+                  path: '/dailyReport/active/detail/:date',
+                  name: '活跃详情',
+                  component: './dailyReport/activeDetail',
+                  hideInMenu: true,
+                },
+                {
                   path: '/dailyReport/retention',
                   name: '留存',
                   component: './dailyReport/retention',

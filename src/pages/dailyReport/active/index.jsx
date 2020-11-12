@@ -59,7 +59,16 @@ const TableList = (props) => {
       title: '留存广告数',
       dataIndex: 'retention_ad_count',
       search: false,
-    }
+    },
+    {
+      title: '操作',
+      valueType: 'option',
+      render: (text, row, _, action) => [
+        <a href={`#/dailyReport/active/detail/${row.current_date}`} rel="noopener noreferrer" key="view">
+          详情
+        </a>
+      ],
+    },
   ];
 
   const dealResponseData = (data) => {
@@ -78,6 +87,7 @@ const TableList = (props) => {
     <PageContainer>
       <ProTable
         pagination={{
+          pageSize: 10,
           simple: true,
         }}
         search={{
