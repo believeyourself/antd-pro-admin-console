@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { PageContainer, } from '@ant-design/pro-layout';
 import { connect } from "umi";
 import { queryRoiReport } from './service';
-import { BackTop, Tabs, Button, DatePicker, Select, Table, Form, Row, Col } from 'antd';
+import { BackTop, Tabs, Button, DatePicker, Select, Table, Form, Row, Col, Spin } from 'antd';
 import DataSet from '@antv/data-set';
-import { Chart, Interval } from "bizcharts";
+import { Chart, Interval, Tooltip } from "bizcharts";
 import * as moment from "moment";
 import { SearchOutlined } from '@ant-design/icons';
 import config from "../../../../config/platformConfig";
@@ -102,17 +102,29 @@ const TableList = (props) => {
     }
   }
 
-  const ds = new DataSet();
-  const dv = ds
-    .createView()
-    .source(eventFunnelData)
-    .transform({
-      type: 'percent',
-      field: 'event_count',
-      dimension: 'media_source',
-      groupBy: ['event_name_origin'],
-      as: 'percent',
-    });
+  let eventsFunnelNode = (<Spin></Spin>);;
+  if (!loading) {
+    const ds = new DataSet();
+    const dv = ds
+      .createView()
+      .source(eventFunnelData)
+      .transform({
+        type: 'percent',
+        field: 'event_count',
+        dimension: 'media_source',
+        groupBy: ['event_name_origin'],
+        as: 'percent',
+      });
+    eventsFunnelNode = (<Chart
+      style={{ padding: 20 }}
+      height={300}
+      placeholder
+      autoFit data={eventFunnelData}>
+      <Interval adjust="stack" color="media_source" position="event_name_origin*event_count" />
+      <Tooltip shared />
+    </Chart>);
+  }
+
 
   let eventOption = [];
   for (let i = 0; i < eventEnum.length; ++i) {
@@ -138,14 +150,13 @@ const TableList = (props) => {
             <Select allowClear onChange={setEventFunnel} placeholder="事件筛选" mode="multiple" className={style.event_select}>{eventOption}</Select>
           </Col>
         </Row>
-        <Chart
-          placeholder
-          autoFit height={300} data={dv.rows}>
-          <Interval adjust="stack" color="media_source" position="event_name_origin*event_count" />
-        </Chart>
+        <div className={style.content_center_container}>
+          {eventsFunnelNode}
+        </div>
+
       </div>
       <div className={style.content}>
-        <Tabs onBlur={group => setGroup(group)} defaultValue="events">
+        <Tabs onChange={group => setGroup(group)} defaultValue="events">
           <TabPane tab="按事件维度分组" key="events" ></TabPane>
           <TabPane tab="按媒体源分组" key="mediaSource"></TabPane>
         </Tabs>
