@@ -100,6 +100,18 @@ export default defineConfig({
               ],
             },
             {
+              path: '/config',
+              name: '系统配置',
+              icon: 'SettingOutlined',
+              routes: [
+                {
+                  path: '/config/game',
+                  name: '游戏列表',
+                  component: './config/game',
+                },
+              ],
+            },
+            {
               component: './404',
             },
           ],

@@ -2,13 +2,14 @@
  * https://github.com/ant-design/ant-design-pro-layout
  */
 import ProLayout from '@ant-design/pro-layout';
-import React, { useMemo, useRef } from 'react';
-import { Link, connect, history, useModel } from 'umi';
+import React, { useEffect, useMemo, useRef } from 'react';
+import { Link, connect, history } from 'umi';
 import { Result, Button, Select } from 'antd';
 import Authorized from '@/utils/Authorized';
 import { getMatchMenu } from '@umijs/route-utils';
 import logo from '../assets/logo.svg';
-import config from "../../config/platformConfig";
+// import config from "../../config/platformConfig";
+import { getGames } from "../services/config";
 
 const Option = Select.Option;
 const noMatch = (
@@ -32,10 +33,11 @@ const menuDataRender = (menuList) =>
     return Authorized.check(item.authority, localItem, null);
   });
 
-
+let i = 0;
 
 const BasicLayout = (props) => {
   const {
+    games,
     gameType,
     collapsed,
     dispatch,
@@ -46,11 +48,27 @@ const BasicLayout = (props) => {
     },
   } = props;
 
+  console.log(games)
+  async function getGamesConfig() {
+    let params = {
+      key: "games"
+    }
+    let { data } = await getGames(params);
+    dispatch({
+      type: 'global/initGames',
+      games: data.records || [],
+    });
+  }
+
+  useEffect(() => {
+    getGamesConfig();
+  }, [])
+
   const gameSelectRender = () => {
     let options = [];
-    for (let i = 0; i < config.games.length; ++i) {
-      let value = config.games[i].value;
-      options.push(<Option key={value} value={value}>{config.games[i].name}</Option>)
+    for (let i = 0; i < games.length; ++i) {
+      let value = games[i].value;
+      options.push(<Option key={value} value={value}>{games[i].name}</Option>)
     }
     return <Select onChange={(gameType) => dispatch({
       type: "global/selectGameType",
@@ -120,6 +138,7 @@ const BasicLayout = (props) => {
 
 export default connect(({ global, settings }) => ({
   gameType: global.gameType,
+  games: global.games,
   collapsed: global.collapsed,
   settings,
 }))(BasicLayout);

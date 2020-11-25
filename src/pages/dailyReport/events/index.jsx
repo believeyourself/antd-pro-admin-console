@@ -3,7 +3,6 @@ import { PageContainer, } from '@ant-design/pro-layout';
 import { connect } from "umi";
 import { queryRoiReport } from './service';
 import { BackTop, Tabs, Button, DatePicker, Select, Table, Form, Row, Col, Spin } from 'antd';
-import DataSet from '@antv/data-set';
 import { Chart, Interval, Tooltip } from "bizcharts";
 import * as moment from "moment";
 import { SearchOutlined } from '@ant-design/icons';
@@ -104,19 +103,8 @@ const TableList = (props) => {
 
   let eventsFunnelNode = (<Spin></Spin>);;
   if (!loading) {
-    const ds = new DataSet();
-    const dv = ds
-      .createView()
-      .source(eventFunnelData)
-      .transform({
-        type: 'percent',
-        field: 'event_count',
-        dimension: 'media_source',
-        groupBy: ['event_name_origin'],
-        as: 'percent',
-      });
     eventsFunnelNode = (<Chart
-      style={{ padding: 20 }}
+      style={{ padding: 30 }}
       height={300}
       placeholder
       autoFit data={eventFunnelData}>
