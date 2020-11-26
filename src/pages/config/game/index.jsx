@@ -3,7 +3,7 @@ import { connect } from "umi";
 import { PageContainer } from "@ant-design/pro-layout";
 import ProTable from '@ant-design/pro-table';
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Modal, Form, Input, Select } from "antd";
+import { Button, Modal, Form, Input, Select, message } from "antd";
 import { addGame } from "../../../services/config";
 const GameConfig = (props) => {
     const { games, dispatch } = props;
@@ -46,6 +46,7 @@ const GameConfig = (props) => {
         dispatch({
             type: 'global/initGames',
         });
+        message.success("添加成功");
     };
 
     const handleCancel = async e => {
@@ -71,7 +72,7 @@ const GameConfig = (props) => {
                 confirmLoading={loading}
                 onCancel={handleCancel}
             >
-                <Form form={form} labelCol={{ span: 4 }}>
+                <Form form={form} labelCol={{ span: 3 }}>
                     <Form.Item name="id" label="ID" required rules={[
                         {
                             required: true,
@@ -99,7 +100,16 @@ const GameConfig = (props) => {
                     ]}>
                         <Input />
                     </Form.Item>
+                    <div>
+                        <p>appsflyer管理后台中需要给对应游戏配置install事件push API回调：</p>
+                        <p>https://yd71q09p27.execute-api.us-west-2.amazonaws.com/prod/common</p>
+
+                        <p>appsflyer管理后台中需要给对应游戏配置应用内事件push API回调：</p><p>https://eilr4u8rd8.execute-api.us-west-2.amazonaws.com/prod/common</p>
+                    </div>
                 </Form>
+
+
+
             </Modal>
         </PageContainer>
     );
