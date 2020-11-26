@@ -8,7 +8,6 @@ import { Result, Button, Select } from 'antd';
 import Authorized from '@/utils/Authorized';
 import { getMatchMenu } from '@umijs/route-utils';
 import logo from '../assets/logo.svg';
-// import config from "../../config/platformConfig";
 import { getGames } from "../services/config";
 
 const Option = Select.Option;
@@ -48,21 +47,11 @@ const BasicLayout = (props) => {
     },
   } = props;
 
-  console.log(games)
-  async function getGamesConfig() {
-    let params = {
-      key: "games"
-    }
-    let { data } = await getGames(params);
+  useEffect(() => {
     dispatch({
       type: 'global/initGames',
-      games: data.records || [],
     });
-  }
-
-  useEffect(() => {
-    getGamesConfig();
-  }, [])
+  }, []);
 
   const gameSelectRender = () => {
     let options = [];

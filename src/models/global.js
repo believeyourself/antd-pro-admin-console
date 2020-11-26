@@ -1,3 +1,4 @@
+import { getGames } from '@/services/config';
 const GlobalModel = {
   namespace: 'global',
   state: {
@@ -12,10 +13,11 @@ const GlobalModel = {
         gameType: gameType,
       });
     },
-    *initGames({ games }, { put }) {
+    *initGames(_, { put, call }) {
+      const { data = {} } = yield call(getGames);
       yield put({
         type: 'setGames',
-        games: games,
+        games: data.records || [],
       });
     },
   },

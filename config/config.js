@@ -101,7 +101,7 @@ export default defineConfig({
             },
             {
               path: '/config',
-              name: '系统配置',
+              name: '配置管理',
               icon: 'SettingOutlined',
               routes: [
                 {

@@ -1,6 +1,6 @@
 import request from '@/utils/request';
-export async function getGames(params) {
-  return request.get('/config', { params });
+export async function getGames() {
+  return request.get('/config', { params: { key: 'games' } });
 }
 
 export async function addGame(params) {
