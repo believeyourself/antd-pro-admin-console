@@ -1,13 +1,13 @@
 import { Drawer } from 'antd';
-import { connect } from "umi";
+import { connect } from 'umi';
 import React, { useState, useRef, useEffect } from 'react';
-import { PageContainer, } from '@ant-design/pro-layout';
+import { PageContainer } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
 import ProDescriptions from '@ant-design/pro-descriptions';
 import { queryRoiReport } from './service';
 
 const TableList = (props) => {
-  let { gameType } = props;
+  const { gameType } = props;
   const actionRef = useRef();
   const [collapsed, setCollapsed] = useState(false);
   const [row, setRow] = useState();
@@ -26,6 +26,11 @@ const TableList = (props) => {
       search: false,
     },
     {
+      title: 'ecpm',
+      dataIndex: 'ecpm',
+      search: false,
+    },
+    {
       title: '日活总收入',
       dataIndex: 'live_revenue',
       search: false,
@@ -41,8 +46,8 @@ const TableList = (props) => {
       search: false,
     },
     {
-      title: '新增广告数',
-      dataIndex: 'new_ad_count',
+      title: '新增人均广告次数',
+      dataIndex: 'new_avg_ad_count',
       search: false,
     },
     {
@@ -56,17 +61,21 @@ const TableList = (props) => {
       search: false,
     },
     {
-      title: '留存广告数',
-      dataIndex: 'retention_ad_count',
+      title: '留存人均广告数',
+      dataIndex: 'retention_avg_ad_count',
       search: false,
     },
     {
       title: '操作',
       valueType: 'option',
-      render: (text, row, _, action) => [
-        <a href={`#/dailyReport/active/detail/${row.current_date}`} rel="noopener noreferrer" key="view">
+      render: (text, rowData) => [
+        <a
+          href={`#/dailyReport/active/detail/${rowData.current_date}`}
+          rel="noopener noreferrer"
+          key="view"
+        >
           详情
-        </a>
+        </a>,
       ],
     },
   ];
@@ -74,10 +83,10 @@ const TableList = (props) => {
   const dealResponseData = (data) => {
     if (data) {
       return Array.isArray(data.records) ? data.records : [];
-    } else {
-      return [];
     }
-  }
+
+    return [];
+  };
 
   useEffect(() => {
     actionRef.current.reload();
@@ -98,7 +107,9 @@ const TableList = (props) => {
         actionRef={actionRef}
         rowKey="key"
         postData={dealResponseData}
-        request={(params, sort, filter) => queryRoiReport({ app_id: gameType, ...params, ...sort, ...filter })}
+        request={(params, sort, filter) =>
+          queryRoiReport({ app_id: gameType, ...params, ...sort, ...filter })
+        }
         columns={columns}
       />
       <Drawer
@@ -112,13 +123,11 @@ const TableList = (props) => {
         {row?.key && (
           <ProDescriptions
             column={2}
-            title={`详情`}
+            title="详情"
             request={async () => ({
               data: row || {},
             })}
-            params={{
-              id: row?.key,
-            }}
+            params={{ id: row?.key }}
             columns={columns}
           />
         )}
@@ -128,5 +137,5 @@ const TableList = (props) => {
 };
 
 export default connect(({ global }) => ({
-  gameType: global.gameType
+  gameType: global.gameType,
 }))(TableList);
