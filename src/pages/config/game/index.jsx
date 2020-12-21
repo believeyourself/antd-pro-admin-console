@@ -102,9 +102,9 @@ const GameConfig = (props) => {
                     </Form.Item>
                     <div>
                         <p>appsflyer管理后台中需要给对应游戏配置install事件push API回调：</p>
+                        <p>https://eilr4u8rd8.execute-api.us-west-2.amazonaws.com/prod/common</p>
+                        <p>appsflyer管理后台中需要给对应游戏配置应用内事件push API回调：</p>
                         <p>https://yd71q09p27.execute-api.us-west-2.amazonaws.com/prod/common</p>
-
-                        <p>appsflyer管理后台中需要给对应游戏配置应用内事件push API回调：</p><p>https://eilr4u8rd8.execute-api.us-west-2.amazonaws.com/prod/common</p>
                     </div>
                 </Form>
 

@@ -26,18 +26,23 @@ const TableList = (props) => {
       search: false,
     },
     {
-      title: 'ecpm',
-      dataIndex: 'ecpm',
+      title: '新增',
+      dataIndex: 'new_count',
       search: false,
     },
     {
-      title: '日活总收入',
+      title: '总收入',
       dataIndex: 'live_revenue',
       search: false,
     },
     {
-      title: '新增',
-      dataIndex: 'new_count',
+      title: '收入ARPU',
+      dataIndex: 'arpu',
+      search: false,
+    },
+    {
+      title: 'ecpm',
+      dataIndex: 'ecpm',
       search: false,
     },
     {
