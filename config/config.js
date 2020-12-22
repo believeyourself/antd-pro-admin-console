@@ -129,6 +129,12 @@ export default defineConfig({
               ],
             },
             {
+              path: '/inviteActivity',
+              name: '拉新活动',
+              icon: 'Plus',
+              component: './activity/invite/invite',
+            },
+            {
               component: './404',
             },
           ],
