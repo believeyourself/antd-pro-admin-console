@@ -29,31 +29,56 @@ export default function Invite() {
     data.userCampaigns?.forEach((item) => {
         let progress = item.stageProgresses;
         list.push({
+            key: item.name,
             name: item.name,
+            curValue_1: progress[0].currentValue,
+            curValue_2: progress[1].currentValue,
             stage_1: `${progress[0].currentValue} / ${progress[0].finalValue}`,
             stage_2: `${progress[1].currentValue} / ${progress[1].finalValue}`,
             progressStatus: progress[1] == 3 ? "是" : "否",
+            installs: data.installs
         })
     })
 
     const columns = [
         {
-            title: 'name',
+            title: 'facebook账户名',
             dataIndex: 'name',
+            width: "20%",
         },
         {
             title: '阶段一',
             dataIndex: 'stage_1',
+            sorter: {
+                compare: (a, b) => a.curValue_1 - b.curValue_1,
+            },
         },
         {
             title: '阶段二',
             dataIndex: 'stage_2',
+            sorter: {
+                compare: (a, b) => a.curValue_2 - b.curValue_2,
+            },
         },
         {
             title: '是否填写paypal',
             dataIndex: 'progressStatus',
         },
     ]
+    const expandColumns = [
+        {
+            title: 'accountId',
+            dataIndex: 'accountId',
+            key: "accountId"
+        },
+        {
+            title: '安装时间(UTC)',
+            dataIndex: 'installTime',
+            render: (text, record, index) => {
+                return moment.utc(text).format("YYYY-MM-DD HH:mm:ss");
+            }
+        },
+    ];
 
     useEffect(() => {
         search();
@@ -65,8 +90,8 @@ export default function Invite() {
                 <Form.Item label="时间">
                     <RangePicker showTime allowClear value={times} onChange={(times) => setTimes(times)} />
                 </Form.Item>
-                <Form.Item label="用户名">
-                    <Input value={accountId} onChange={(e) => setAccountId(e.target.value.trim())} />
+                <Form.Item label="facebook账户名">
+                    <Input allowClear value={accountId} onChange={(e) => setAccountId(e.target.value.trim())} />
                 </Form.Item>
                 <Form.Item>
                     <Button loading={loading} onClick={search} type="primary">查询</Button>
@@ -76,22 +101,29 @@ export default function Invite() {
             <Row gutter={{ xs: 0, md: 24 }}>
                 <Col md={8} xs={24}>
                     <Card title="facebook绑定数" >
-                        {data.invites}
+                        {data.installs ? "--" : data.invites}
                     </Card>
                 </Col>
                 <Col md={8} xs={24}>
-                    <Card title="被邀请人数" >
-                        {data.install}
+                    <Card title="邀请人数" >
+                        {data.installs ? "--" : data.install}
                     </Card>
                 </Col>
                 <Col md={8} xs={24}>
                     <Card title="填写paypal人数" >
-                        {data.finish}
+                        {data.installs ? "--" : data.finish}
                     </Card>
                 </Col>
             </Row >
 
-            <Table columns={columns} dataSource={list}></Table>
+            <Table
+                columns={columns}
+                dataSource={list}
+                expandable={{
+                    expandedRowRender: record => <Table key={record.accountId} columns={expandColumns} dataSource={record.installs}></Table>,
+                    rowExpandable: record => record.installs?.length > 0
+                }}
+            ></Table>
         </Space>
     </PageContainer >
 }
