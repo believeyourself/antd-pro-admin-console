@@ -28,6 +28,15 @@ export default function Invite() {
     const list = [];
     data.userCampaigns?.forEach((item) => {
         let progress = item.stageProgresses;
+        let paypal = "--";
+        progress.forEach((item) => {
+            item.rewards.forEach((reward) => {
+                if (reward.awardedMemo && reward.awardedMemo != "") {
+                    paypal = reward.awardedMemo;
+                }
+            });
+        });
+        console.log(paypal)
         list.push({
             key: item.name,
             name: item.name,
@@ -35,7 +44,7 @@ export default function Invite() {
             curValue_2: progress[1].currentValue,
             stage_1: `${progress[0].currentValue} / ${progress[0].finalValue}`,
             stage_2: `${progress[1].currentValue} / ${progress[1].finalValue}`,
-            progressStatus: progress[1] == 3 ? "是" : "否",
+            paypal,
             installs: data.installs
         })
     })
@@ -61,8 +70,11 @@ export default function Invite() {
             },
         },
         {
-            title: '是否填写paypal',
-            dataIndex: 'progressStatus',
+            title: 'paypal',
+            dataIndex: 'paypal',
+            sorter: {
+                compare: (a, b) => a.paypal > b.paypal,
+            },
         },
     ]
     const expandColumns = [
