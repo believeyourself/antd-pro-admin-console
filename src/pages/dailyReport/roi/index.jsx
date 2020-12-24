@@ -71,7 +71,20 @@ const TableList = (props) => {
       title: '新用户24小时广告收益',
       dataIndex: 'first_24_hour_revenue',
       search: false,
-    }
+    },
+    {
+      title: '操作',
+      valueType: 'option',
+      render: (text, rowData) => [
+        <a
+          href={`#/dailyReport/roi/detail/${rowData.current_date}`}
+          rel="noopener noreferrer"
+          key="view"
+        >
+          详情
+        </a>,
+      ],
+    },
   ];
 
   useEffect(() => {
@@ -88,44 +101,10 @@ const TableList = (props) => {
     }
   }
 
-  const expandedRowRender = (item) => {
-    const data = [];
-    for (let media_source in item.channel) {
-      let new_user_count = item.channel[media_source].new_user_count;
-      let total_ad_count = item.channel[media_source].total_ad_count;
-      let revenue = item.channel[media_source].revenue;
-      data.push({
-        key: media_source,
-        media_source,
-        revenue,
-        new_user_count: new_user_count,
-        ad_count: total_ad_count,
-        av_ad_count: (total_ad_count / new_user_count).toFixed(2),
-      });
-    }
-    return (
-      <ProTable
-        columns={[
-          { title: '渠道', dataIndex: 'media_source' },
-          { title: '收益', dataIndex: 'revenue' },
-          { title: '新增用户', dataIndex: 'new_user_count' },
-          { title: '新增广告次数', dataIndex: 'ad_count' },
-          { title: '新增人均广告次数', dataIndex: 'av_ad_count' },
-        ]}
-        headerTitle="渠道统计"
-        search={false}
-        options={false}
-        dataSource={data}
-        pagination={false}
-      />
-    );
-  };
-
   return (
     <PageContainer>
       <ProTable
         actionRef={actionRef}
-        expandable={{ expandedRowRender }}
         pagination={{
           simple: true,
           pageSize: 10

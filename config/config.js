@@ -71,14 +71,20 @@ export default defineConfig({
                   component: './dailyReport/roi',
                 },
                 {
+                  path: '/dailyReport/roi/detail/:date?',
+                  name: 'ROI详情',
+                  component: './dailyReport/roi/roiDetail',
+                  hideInMenu: true,
+                },
+                {
                   path: '/dailyReport/active',
                   name: '活跃',
                   component: './dailyReport/active',
                 },
                 {
-                  path: '/dailyReport/active/detail/:date',
+                  path: '/dailyReport/active/detail/:date?',
                   name: '活跃详情',
-                  component: './dailyReport/activeDetail',
+                  component: './dailyReport/active/activeDetail',
                   hideInMenu: true,
                 },
                 {
@@ -87,9 +93,9 @@ export default defineConfig({
                   component: './dailyReport/retention',
                 },
                 {
-                  path: '/dailyReport/retention/detail/:date',
+                  path: '/dailyReport/retention/detail/:date?',
                   name: '留存详情',
-                  component: './dailyReport/retentionDetail',
+                  component: './dailyReport/retention/retentionDetail',
                   hideInMenu: true,
                 },
                 {

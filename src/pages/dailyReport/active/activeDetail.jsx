@@ -1,7 +1,7 @@
 import { connect } from "umi";
 import React, { useState } from 'react';
 import { PageContainer, } from '@ant-design/pro-layout';
-import { queryData } from './service';
+import { queryDetail } from './service';
 import { SearchOutlined } from '@ant-design/icons';
 import * as moment from "moment";
 import { Table, Select, Row, Col, Button, DatePicker } from "antd";
@@ -80,7 +80,7 @@ const TableList = (props) => {
       current_date: currentDate.format("YYYY-MM-DD")
     }
     setLoading(true);
-    let { data } = await queryData(params);
+    let { data } = await queryDetail(params);
     let records = data ? data.records : [];
     records.sort((a, b) => {
       for (let i = 0; i < conditions.length; ++i) {

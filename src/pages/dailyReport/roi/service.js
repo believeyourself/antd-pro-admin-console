@@ -7,3 +7,12 @@ export async function queryRoiReport(params) {
     params,
   });
 }
+
+export async function queryDetail(params) {
+  if (!params.app_id) {
+    return {};
+  }
+  return request.get('/roi/roidetail', {
+    params,
+  });
+}

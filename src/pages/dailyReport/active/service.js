@@ -7,3 +7,12 @@ export async function queryRoiReport(params) {
     params,
   });
 }
+
+export async function queryDetail(params) {
+  if (!params.app_id || !params.current_date || !params.conditions) {
+    return {};
+  }
+  return request.get('/report/activedetail', {
+    params,
+  });
+}
