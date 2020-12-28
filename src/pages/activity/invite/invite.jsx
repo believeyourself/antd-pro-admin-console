@@ -6,19 +6,18 @@ import { queryData } from "./service"
 
 const { RangePicker } = DatePicker;
 export default function Invite() {
-    const startTime = moment().subtract(1, "d").hour(0).minute(0).second(0);
-    const endTime = moment().hour(0).minute(0).second(0);
+    const startTime = moment.utc().subtract(1, "d").hour(0).minute(0).second(0);
+    const endTime = moment.utc().hour(0).minute(0).second(0);
     const [times, setTimes] = useState([startTime, endTime]);
     const [accountId, setAccountId] = useState();
     const [data, setData] = useState({});
     const [loading, setLoading] = useState(false);
-
     const search = async () => {
         setLoading(true);
         let params = {
             accountId,
             startTime: times[0].valueOf(),
-            endTime: times[1].valueOf()
+            endTime: times[1].valueOf(),
         }
         const { data } = await queryData(params);
         setData(data);
@@ -36,7 +35,6 @@ export default function Invite() {
                 }
             });
         });
-        console.log(paypal)
         list.push({
             key: item.name,
             name: item.name,
@@ -99,7 +97,7 @@ export default function Invite() {
     return <PageContainer>
         <Space direction="vertical" style={{ display: "flex" }}>
             <Form layout="inline" style={{ backgroundColor: "#fff", padding: "2rem 1rem" }}>
-                <Form.Item label="时间">
+                <Form.Item label="UTC时间">
                     <RangePicker showTime allowClear value={times} onChange={(times) => setTimes(times)} />
                 </Form.Item>
                 <Form.Item label="facebook账户名">
