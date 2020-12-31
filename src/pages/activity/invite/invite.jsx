@@ -38,6 +38,7 @@ export default function Invite() {
         list.push({
             key: item.name,
             name: item.name,
+            email: item.email,
             curValue_1: progress[0].currentValue,
             curValue_2: progress[1].currentValue,
             stage_1: `${progress[0].currentValue} / ${progress[0].finalValue}`,
@@ -52,6 +53,10 @@ export default function Invite() {
             title: 'facebook账户名',
             dataIndex: 'name',
             width: "20%",
+        },
+        {
+            title: 'email',
+            dataIndex: 'email',
         },
         {
             title: '阶段一',
