@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Form, DatePicker, Input, Button, Card, Row, Col, Space, Table } from 'antd';
+import React, { useEffect, useState, useRef } from 'react';
+import { Form, DatePicker, Input, Button, Card, Row, Col, Space, Table, Modal } from 'antd';
 import { PageContainer } from '@ant-design/pro-layout';
 import * as moment from 'moment';
 import { queryData } from './service';
@@ -13,15 +13,62 @@ export default function Invite() {
   const [accountId, setAccountId] = useState();
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(false);
-  const search = async () => {
+
+  const columns = [
+    {
+      title: 'facebook账户名',
+      dataIndex: 'name',
+      width: '20%',
+    },
+    {
+      title: 'email',
+      dataIndex: 'email',
+    },
+    {
+      title: '进度',
+      dataIndex: 'stage_1',
+      sorter: {
+        compare: (a, b) => a.curValue_1 - b.curValue_1,
+      },
+    },
+    {
+      title: '邀请人数',
+      dataIndex: 'installs',
+      render: (text, record, index) => {
+        if (record.installs) {
+          return text;
+        } else {
+          return <a onClick={() => search(record.accountId, index)}>查询</a>;
+        }
+      },
+    },
+    {
+      title: 'paypal',
+      dataIndex: 'paypal',
+      sorter: {
+        compare: (a, b) => a.paypal > b.paypal,
+      },
+    },
+  ];
+
+  const search = async (id, index) => {
     setLoading(true);
     let params = {
-      accountId,
+      accountId: id || accountId,
       startTime: times[0].valueOf(),
       endTime: times[1].valueOf(),
     };
-    const { data } = await queryData(params);
-    setData(data);
+    const result = await queryData(params);
+    if (!id) {
+      setData(result?.data || {});
+    } else {
+      Modal.confirm({
+        title: '邀请人数',
+        content: result.data.installs.length + '人',
+        okText: '确认',
+        cancelText: '取消',
+      });
+    }
     setLoading(false);
   };
 
@@ -38,12 +85,11 @@ export default function Invite() {
     });
     list.push({
       key: item.name,
+      accountId: item.accountId,
       name: item.name,
       email: item.email,
       curValue_1: progress[0].currentValue,
-      curValue_2: progress[1].currentValue,
-      stage_1: `${progress[0].currentValue} / ${progress[0].finalValue}`,
-      stage_2: `${progress[1].currentValue} / ${progress[1].finalValue}`,
+      stage_1: `${progress[0].currentValue / 100} / ${progress[0].finalValue / 100}`,
       paypal,
       installs: data.installs,
     });
@@ -74,53 +120,6 @@ export default function Invite() {
     toExcel.saveExcel();
   };
 
-  const columns = [
-    {
-      title: 'facebook账户名',
-      dataIndex: 'name',
-      width: '20%',
-    },
-    {
-      title: 'email',
-      dataIndex: 'email',
-    },
-    {
-      title: '阶段一',
-      dataIndex: 'stage_1',
-      sorter: {
-        compare: (a, b) => a.curValue_1 - b.curValue_1,
-      },
-    },
-    {
-      title: '阶段二',
-      dataIndex: 'stage_2',
-      sorter: {
-        compare: (a, b) => a.curValue_2 - b.curValue_2,
-      },
-    },
-    {
-      title: 'paypal',
-      dataIndex: 'paypal',
-      sorter: {
-        compare: (a, b) => a.paypal > b.paypal,
-      },
-    },
-  ];
-  const expandColumns = [
-    {
-      title: 'accountId',
-      dataIndex: 'accountId',
-      key: 'accountId',
-    },
-    {
-      title: '安装时间(UTC)',
-      dataIndex: 'installTime',
-      render: (text, record, index) => {
-        return moment.utc(text).format('YYYY-MM-DD HH:mm:ss');
-      },
-    },
-  ];
-
   useEffect(() => {
     search();
   }, []);
@@ -140,7 +139,7 @@ export default function Invite() {
             />
           </Form.Item>
           <Form.Item>
-            <Button loading={loading} onClick={search} type="primary">
+            <Button loading={loading} onClick={() => search()} type="primary">
               查询
             </Button>
           </Form.Item>
@@ -162,21 +161,7 @@ export default function Invite() {
             <Card title="填写paypal人数">{data.installs ? '--' : data.finish}</Card>
           </Col>
         </Row>
-
-        <Table
-          columns={columns}
-          dataSource={list}
-          expandable={{
-            expandedRowRender: (record) => (
-              <Table
-                key={record.accountId}
-                columns={expandColumns}
-                dataSource={record.installs}
-              ></Table>
-            ),
-            rowExpandable: (record) => record.installs?.length > 0,
-          }}
-        ></Table>
+        <Table loading={loading} columns={columns} dataSource={list}></Table>
       </Space>
     </PageContainer>
   );
