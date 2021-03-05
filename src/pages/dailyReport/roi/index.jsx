@@ -1,8 +1,8 @@
 import { Drawer } from 'antd';
 import React, { useState, useRef } from 'react';
-import { PageContainer, } from '@ant-design/pro-layout';
+import { PageContainer } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
-import { connect } from "umi";
+import { connect } from 'umi';
 import ProDescriptions from '@ant-design/pro-descriptions';
 import { queryRoiReport } from './service';
 import { useEffect } from 'react';
@@ -27,21 +27,21 @@ const TableList = (props) => {
       dataIndex: 'new_user_count',
       search: false,
     },
-    {
-      title: '新增收益',
-      dataIndex: 'new_user_revenue',
-      search: false,
-    },
+    // {
+    //   title: '新增收益',
+    //   dataIndex: 'new_user_revenue',
+    //   search: false,
+    // },
     {
       title: '自然新增',
       dataIndex: 'organic_count',
       search: false,
     },
-    {
-      title: '自然收益',
-      dataIndex: 'organic_revenue',
-      search: false,
-    },
+    // {
+    //   title: '自然收益',
+    //   dataIndex: 'organic_revenue',
+    //   search: false,
+    // },
     {
       title: '自然广告次数',
       dataIndex: 'total_ad_count_oganic',
@@ -52,11 +52,11 @@ const TableList = (props) => {
       dataIndex: 'non_organic_count',
       search: false,
     },
-    {
-      title: '买量收益',
-      dataIndex: 'non_organic_revenue',
-      search: false,
-    },
+    // {
+    //   title: '买量收益',
+    //   dataIndex: 'non_organic_revenue',
+    //   search: false,
+    // },
     {
       title: '买量广告次数',
       dataIndex: 'total_ad_count_non_oganic',
@@ -67,11 +67,11 @@ const TableList = (props) => {
       dataIndex: 'first_24_hour_ad_count',
       search: false,
     },
-    {
-      title: '新用户24小时广告收益',
-      dataIndex: 'first_24_hour_revenue',
-      search: false,
-    },
+    // {
+    //   title: '新用户24小时广告收益',
+    //   dataIndex: 'first_24_hour_revenue',
+    //   search: false,
+    // },
     {
       title: '操作',
       valueType: 'option',
@@ -88,10 +88,8 @@ const TableList = (props) => {
   ];
 
   useEffect(() => {
-    actionRef.current.reload()
-  }, [gameType])
-
-
+    actionRef.current.reload();
+  }, [gameType]);
 
   const dealResponseData = (data) => {
     if (data && Array.isArray(data.records) && data.records.length > 0) {
@@ -99,7 +97,7 @@ const TableList = (props) => {
     } else {
       return [];
     }
-  }
+  };
 
   return (
     <PageContainer>
@@ -107,7 +105,7 @@ const TableList = (props) => {
         actionRef={actionRef}
         pagination={{
           simple: true,
-          pageSize: 10
+          pageSize: 10,
         }}
         search={{
           collapsed,
@@ -116,7 +114,9 @@ const TableList = (props) => {
         headerTitle="ROI日报"
         rowKey="key"
         postData={dealResponseData}
-        request={(params, sort, filter) => queryRoiReport({ app_id: gameType, ...params, ...sort, ...filter })}
+        request={(params, sort, filter) =>
+          queryRoiReport({ app_id: gameType, ...params, ...sort, ...filter })
+        }
         columns={columns}
       />
       <Drawer
@@ -146,5 +146,5 @@ const TableList = (props) => {
 };
 
 export default connect(({ global }) => ({
-  gameType: global.gameType
+  gameType: global.gameType,
 }))(TableList);

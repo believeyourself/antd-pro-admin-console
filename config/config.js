@@ -88,6 +88,12 @@ export default defineConfig({
                   hideInMenu: true,
                 },
                 {
+                  path: '/dailyReport/active/incomeDetail/:date?',
+                  name: '收入详情',
+                  component: './dailyReport/active/incomeDetail',
+                  hideInMenu: true,
+                },
+                {
                   path: '/dailyReport/retention',
                   name: '留存',
                   component: './dailyReport/retention',

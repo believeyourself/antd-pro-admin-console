@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from "umi";
+import { connect } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import { queryRoiReport } from './service';
-import { Chart, Line, Slider } from "bizcharts";
+import { Chart, Line, Slider } from 'bizcharts';
 import { Row, Col, Button, DatePicker, Divider, Spin } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import * as moment from "moment";
+import * as moment from 'moment';
 
 const OnlineUserGraph = (props) => {
   let { gameType } = props;
@@ -16,48 +16,60 @@ const OnlineUserGraph = (props) => {
   async function queryData() {
     let params = {
       app_id: gameType,
-      current_date: currentDate.format("YYYY-MM-DD")
-    }
+      current_date: currentDate.format('YYYY-MM-DD'),
+    };
     setLoading(true);
-    let { data } = await queryRoiReport(params);
+    let { data = [] } = await queryRoiReport(params);
     setData(data);
     setLoading(false);
   }
 
   useEffect(() => {
     queryData();
-  }, [gameType])
+  }, [gameType]);
 
-
-  let chart = (<div style={{ textAlign: "center" }}><Spin delay={200} /></div>);
+  let chart = (
+    <div style={{ textAlign: 'center' }}>
+      <Spin delay={200} />
+    </div>
+  );
   if (!loading) {
-    chart = (<Chart padding={50} height="60vh" data={data} autoFit>
-      <Line position="record_time*online_count" />
-      <Slider
-        start={0.5}
-      />
-    </Chart>
+    chart = (
+      <Chart padding={50} height="60vh" data={data} autoFit>
+        <Line position="record_time*online_count" />
+        <Slider start={0.5} />
+      </Chart>
     );
   }
-  return (<PageContainer>
-    <div style={{ "backgroundColor": "#FFF", minHeight: "70vh" }}>
-      <div style={{ padding: "20px" }}>
-        <Row align="middle" justify="start" gutter={16}>
-          <Col span={8}>
-            日期：<DatePicker style={{ width: "80%" }} value={currentDate} onChange={setCurrentDate} />
-          </Col>
-          <Col offset={8} span={8} style={{ textAlign: "right" }}>
-            <Button type="primary" htmlType="submit" icon={<SearchOutlined />} onClick={queryData}>查询</Button>
-          </Col>
-        </Row>
-      </div>
+  return (
+    <PageContainer>
+      <div style={{ backgroundColor: '#FFF', minHeight: '70vh' }}>
+        <div style={{ padding: '20px' }}>
+          <Row align="middle" justify="start" gutter={16}>
+            <Col span={8}>
+              日期：
+              <DatePicker style={{ width: '80%' }} value={currentDate} onChange={setCurrentDate} />
+            </Col>
+            <Col offset={8} span={8} style={{ textAlign: 'right' }}>
+              <Button
+                type="primary"
+                htmlType="submit"
+                icon={<SearchOutlined />}
+                onClick={queryData}
+              >
+                查询
+              </Button>
+            </Col>
+          </Row>
+        </div>
 
-      <Divider />
-      {chart}
-    </div>
-  </PageContainer>)
+        <Divider />
+        {chart}
+      </div>
+    </PageContainer>
+  );
 };
 
 export default connect(({ global }) => ({
-  gameType: global.gameType
+  gameType: global.gameType,
 }))(OnlineUserGraph);

@@ -25,18 +25,18 @@ const TableList = (props) => {
       dataIndex: 'live_count',
       search: false,
     },
+    // {
+    //   title: '日活广告次数',
+    //   dataIndex: 'live_ad_count',
+    //   search: false,
+    // },
     {
-      title: '新增',
-      dataIndex: 'new_count',
-      search: false,
-    },
-    {
-      title: '总收入',
+      title: '日活预估收入',
       dataIndex: 'live_revenue',
       search: false,
     },
     {
-      title: '收入ARPU',
+      title: 'ARPU',
       dataIndex: 'arpu',
       search: false,
     },
@@ -46,10 +46,15 @@ const TableList = (props) => {
       search: false,
     },
     {
-      title: '新增收益',
-      dataIndex: 'new_revenue',
+      title: '新增人数',
+      dataIndex: 'new_count',
       search: false,
     },
+    // {
+    //   title: '新增收益',
+    //   dataIndex: 'new_revenue',
+    //   search: false,
+    // },
     {
       title: '新增人均广告次数',
       dataIndex: 'new_avg_ad_count',
@@ -60,11 +65,11 @@ const TableList = (props) => {
       dataIndex: 'retention_count',
       search: false,
     },
-    {
-      title: '留存收益',
-      dataIndex: 'retention_revenue',
-      search: false,
-    },
+    // {
+    //   title: '留存收益',
+    //   dataIndex: 'retention_revenue',
+    //   search: false,
+    // },
     {
       title: '留存人均广告数',
       dataIndex: 'retention_avg_ad_count',
@@ -80,6 +85,13 @@ const TableList = (props) => {
           key="view"
         >
           详情
+        </a>,
+        <a
+          href={`#/dailyReport/active/incomeDetail/${rowData.current_date}`}
+          rel="noopener noreferrer"
+          key="view"
+        >
+          收入详情
         </a>,
       ],
     },

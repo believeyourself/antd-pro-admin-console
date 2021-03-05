@@ -51,7 +51,9 @@ const errorHandler = (error) => {
 const request = extend({
   errorHandler,
   prefix: 'https://lmm0p2w6k0.execute-api.us-west-2.amazonaws.com/dev',
-  // 默认错误处理
-  // credentials: 'include', // 默认请求是否带上cookie
 });
 export default request;
+
+export const requestWithoutPrefix = extend({
+  errorHandler,
+});

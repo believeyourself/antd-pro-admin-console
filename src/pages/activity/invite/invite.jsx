@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Form, DatePicker, Input, Button, Card, Row, Col, Space, Table, Modal } from 'antd';
 import { PageContainer } from '@ant-design/pro-layout';
 import * as moment from 'moment';
@@ -72,28 +72,31 @@ export default function Invite() {
     setLoading(false);
   };
 
-  const list = [];
-  data.userCampaigns?.forEach((item) => {
-    let progress = item.stageProgresses;
-    let paypal = '--';
-    progress.forEach((item) => {
-      item.rewards.forEach((reward) => {
-        if (reward.awardedMemo && reward.awardedMemo != '') {
-          paypal = reward.awardedMemo;
-        }
+  const list = useMemo(() => {
+    let list = [];
+    data.userCampaigns?.forEach((item) => {
+      let progress = item.stageProgresses;
+      let paypal = '--';
+      progress.forEach((item) => {
+        item.rewards.forEach((reward) => {
+          if (reward.awardedMemo && reward.awardedMemo != '') {
+            paypal = reward.awardedMemo;
+          }
+        });
+      });
+      list.push({
+        key: item.name,
+        accountId: item.accountId,
+        name: item.name,
+        email: item.email,
+        curValue_1: progress[0].currentValue,
+        stage_1: `${progress[0].currentValue / 100} / ${progress[0].finalValue / 100}`,
+        paypal,
+        installs: data.installs,
       });
     });
-    list.push({
-      key: item.name,
-      accountId: item.accountId,
-      name: item.name,
-      email: item.email,
-      curValue_1: progress[0].currentValue,
-      stage_1: `${progress[0].currentValue / 100} / ${progress[0].finalValue / 100}`,
-      paypal,
-      installs: data.installs,
-    });
-  });
+    return list;
+  }, [data]);
 
   const exportExcel = function (data) {
     var option = {};
