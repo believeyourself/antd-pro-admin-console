@@ -20,10 +20,6 @@ export function getAuthority(str) {
     return [authority];
   }
 
-  if (!authority) {
-    return ['admin'];
-  }
-
   return authority;
 }
 export function setAuthority(authority) {

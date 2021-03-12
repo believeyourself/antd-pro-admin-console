@@ -96,7 +96,7 @@ export default [
                 component: './users/adCount',
               },
               {
-                path: '/userData/onlineUserCount',
+                path: '/users/onlineUserCount',
                 name: '在线统计',
                 component: './users/onlineUserCount',
               },

@@ -54,7 +54,6 @@
     "@umijs/route-utils": "^1.0.33",
     "ant_design_pro_tabs": "^0.1.9",
     "antd": "^4.7.0",
-    "antv": "^0.2.2",
     "bizcharts": "^4.0.14",
     "classnames": "^2.2.6",
     "dayjs": "^1.9.5",

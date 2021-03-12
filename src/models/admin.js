@@ -1,4 +1,4 @@
-import { queryCurrent } from '@/services/user';
+import { queryCurrent } from '@/services/admin';
 const UserModel = {
   namespace: 'user',
   state: {
