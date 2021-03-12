@@ -18,9 +18,9 @@ function AdCount({ dispatch, gameType, adCount }) {
         <div className={style.chart_container}>
           <Chart
             scale={{
-              type: 'pow',
               count: {
                 alias: '广告次数',
+                type: 'cat',
               },
               users: {
                 alias: '用户数',
@@ -30,7 +30,8 @@ function AdCount({ dispatch, gameType, adCount }) {
             autoFit
             data={data}
           >
-            <Axis name="count" />
+            <Axis name="count" title={true} />
+            <Axis name="users" title={true} />
             <Interval position="count*users" />
           </Chart>
         </div>
