@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { PageContainer, } from '@ant-design/pro-layout';
 import { queryDetail } from './service';
 import { SearchOutlined } from '@ant-design/icons';
-import * as moment from "moment";
+import { dayjs } from '@/utils/utils';
 import { Table, Select, Row, Col, Button, DatePicker } from "antd";
 import config from "../../../../config/platformConfig";
 const Option = Select.Option;
@@ -20,7 +20,7 @@ for (let i = 0; i < config.categories.length; ++i) {
 const TableList = (props) => {
   let { gameType } = props;
   let date = props.match.params.date;
-  const [currentDate, setCurrentDate] = useState(moment.utc(date));
+  const [currentDate, setCurrentDate] = useState(dayjs.utc(date));
   const [conditions, setConditions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [records, setRecords] = useState([]);

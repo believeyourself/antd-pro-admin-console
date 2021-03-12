@@ -4,6 +4,16 @@ export default [
     component: '../layouts/SecurityLayout',
     routes: [
       {
+        path: '/user',
+        component: '../layouts/UserLayout',
+        routes: [
+          {
+            path: '/admin/login',
+            component: './admin/login',
+          },
+        ],
+      },
+      {
         path: '/',
         component: '../layouts/BasicLayout',
         routes: [
@@ -21,6 +31,7 @@ export default [
             path: '/dailyReport',
             name: '每日报表',
             icon: 'TableOutlined',
+            // authority: ['admin', 'operator'],
             routes: [
               {
                 path: '/dailyReport/roi',
@@ -69,19 +80,25 @@ export default [
             ],
           },
           {
-            path: '/userData',
+            path: '/users',
             name: '玩家数据',
             icon: 'User',
+            authority: ['admin', 'operator'],
             routes: [
               {
-                path: '/userData/userList',
+                path: '/users/userList',
                 name: '玩家查询',
-                component: './userData/userList',
+                component: './users/userList',
+              },
+              {
+                path: '/users/adCount',
+                name: '广告次数',
+                component: './users/adCount',
               },
               {
                 path: '/userData/onlineUserCount',
                 name: '在线统计',
-                component: './userData/onlineUserCount',
+                component: './users/onlineUserCount',
               },
             ],
           },
@@ -89,6 +106,7 @@ export default [
             path: '/config',
             name: '配置管理',
             icon: 'SettingOutlined',
+            // authority: ['admin'],
             routes: [
               {
                 path: '/config/game',
@@ -101,6 +119,7 @@ export default [
             path: '/inviteActivity',
             name: '拉新活动',
             icon: 'Plus',
+            // authority: ['admin', 'operator'],
             component: './activity/invite/invite',
           },
           {

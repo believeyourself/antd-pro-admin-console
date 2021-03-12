@@ -3,7 +3,6 @@ import { defineConfig } from 'umi';
 import defaultSettings from './defaultSettings';
 import routes from './routes';
 import proxy from './proxy';
-const { REACT_APP_ENV } = process.env;
 export default defineConfig({
   alias: {},
   history: { type: 'hash' },

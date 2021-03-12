@@ -1,5 +1,5 @@
 /**
- * https://github.com/ant-design/ant-design-pro-layout
+ * https://procomponents.ant.design/
  */
 import ProLayout from '@ant-design/pro-layout';
 import React, { useEffect, useMemo, useRef } from 'react';
@@ -8,7 +8,6 @@ import { Result, Button, Select } from 'antd';
 import Authorized from '@/utils/Authorized';
 import { getMatchMenu } from '@umijs/route-utils';
 import logo from '../assets/logo.svg';
-import { getGames } from "../services/config";
 
 const Option = Select.Option;
 const noMatch = (
@@ -31,8 +30,6 @@ const menuDataRender = (menuList) =>
     };
     return Authorized.check(item.authority, localItem, null);
   });
-
-let i = 0;
 
 const BasicLayout = (props) => {
   const {
@@ -57,13 +54,28 @@ const BasicLayout = (props) => {
     let options = [];
     for (let i = 0; i < games.length; ++i) {
       let value = games[i].value;
-      options.push(<Option key={value} value={value}>{games[i].name}</Option>)
+      options.push(
+        <Option key={value} value={value}>
+          {games[i].name}
+        </Option>,
+      );
     }
-    return <Select onChange={(gameType) => dispatch({
-      type: "global/selectGameType",
-      gameType
-    })} value={gameType} placeholder="请选择游戏" style={{ display: collapsed ? "none" : "block", width: "100%" }}>{options}</Select>
-  }
+    return (
+      <Select
+        onChange={(gameType) =>
+          dispatch({
+            type: 'global/selectGameType',
+            gameType,
+          })
+        }
+        value={gameType}
+        placeholder="请选择游戏"
+        style={{ display: collapsed ? 'none' : 'block', width: '100%' }}
+      >
+        {options}
+      </Select>
+    );
+  };
   const menuDataRef = useRef([]);
 
   const handleMenuCollapse = (payload) => {
@@ -82,6 +94,7 @@ const BasicLayout = (props) => {
       },
     [location.pathname],
   );
+
   return (
     <ProLayout
       logo={logo}
@@ -102,12 +115,11 @@ const BasicLayout = (props) => {
         ...routers,
       ]}
       itemRender={(route, params, routes, paths) => {
-        const first = routes.indexOf(route) === 0;
-        return first ? (
-          <Link to={paths.join('/')}>{route.breadcrumbName}</Link>
+        return route.component ? (
+          <Link to={route.path}>{route.breadcrumbName}</Link>
         ) : (
-            <span>{route.breadcrumbName}</span>
-          );
+          <span>{route.breadcrumbName}</span>
+        );
       }}
       menuDataRender={menuDataRender}
       menuExtraRender={gameSelectRender}
@@ -121,7 +133,7 @@ const BasicLayout = (props) => {
       <Authorized authority={authorized.authority} noMatch={noMatch}>
         {children}
       </Authorized>
-    </ProLayout >
+    </ProLayout>
   );
 };
 

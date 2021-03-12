@@ -3,12 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { queryIncomeDetail } from './service';
 import { SearchOutlined } from '@ant-design/icons';
-import * as moment from 'moment';
+import { dayjs } from '@/utils/utils';
 import { Table, Row, Col, Button, DatePicker } from 'antd';
 const TableList = (props) => {
   let { gameType } = props;
   let date = props.match.params.date;
-  const [currentDate, setCurrentDate] = useState(moment.utc(date));
+  const [currentDate, setCurrentDate] = useState(dayjs.utc(date));
   const [loading, setLoading] = useState(false);
   const [records, setRecords] = useState([]);
   let columns = [

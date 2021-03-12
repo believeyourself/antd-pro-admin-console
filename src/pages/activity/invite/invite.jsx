@@ -1,14 +1,14 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { Form, DatePicker, Input, Button, Card, Row, Col, Space, Table, Modal } from 'antd';
 import { PageContainer } from '@ant-design/pro-layout';
-import * as moment from 'moment';
+import { dayjs } from '@/utils/utils';
 import { queryData } from './service';
 import ExportJsonExcel from 'js-export-excel';
 
 const { RangePicker } = DatePicker;
 export default function Invite() {
-  const startTime = moment.utc().subtract(1, 'd').hour(0).minute(0).second(0);
-  const endTime = moment.utc().hour(0).minute(0).second(0);
+  const startTime = dayjs.utc().subtract(1, 'd').hour(0).minute(0).second(0);
+  const endTime = dayjs.utc().hour(0).minute(0).second(0);
   const [times, setTimes] = useState([startTime, endTime]);
   const [accountId, setAccountId] = useState();
   const [data, setData] = useState({});

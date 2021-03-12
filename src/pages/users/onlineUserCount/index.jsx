@@ -5,11 +5,11 @@ import { queryRoiReport } from './service';
 import { Chart, Line, Slider } from 'bizcharts';
 import { Row, Col, Button, DatePicker, Divider, Spin } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import * as moment from 'moment';
+import { dayjs } from '@/utils/utils';
 
 const OnlineUserGraph = (props) => {
   let { gameType } = props;
-  const [currentDate, setCurrentDate] = useState(moment.utc());
+  const [currentDate, setCurrentDate] = useState(dayjs.utc());
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
 

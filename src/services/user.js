@@ -1,7 +1,4 @@
 import request from '@/utils/request';
-export async function query() {
-  return request('/api/users');
-}
 export async function queryCurrent() {
   return {
     name: 'Serati Ma',
@@ -29,7 +26,4 @@ export async function queryCurrent() {
     address: '西湖区工专路 77 号',
     phone: '0752-268888888',
   };
-}
-export async function queryNotices() {
-  return request('/api/notices');
 }

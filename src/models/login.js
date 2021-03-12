@@ -10,11 +10,21 @@ const Model = {
   },
   effects: {
     *login({ payload }, { call, put }) {
-      const response = yield call(fakeAccountLogin, payload);
+      // const response = yield call(fakeAccountLogin, payload);
       yield put({
         type: 'changeLoginStatus',
-        payload: response,
-      }); // Login successfully
+        payload,
+        // payload: {response},
+      });
+
+      yield put({
+        type: 'user/saveCurrentUser',
+        payload: { ...payload, userId: 'test' },
+        // payload: {response},
+      });
+      
+      window.location.hash = '/';
+      return;
 
       if (response.status === 'ok') {
         const urlParams = new URL(window.location.href);
@@ -41,8 +51,7 @@ const Model = {
     },
 
     logout() {
-      const { redirect } = getPageQuery(); // Note: There may be security issues, please note
-
+      const { redirect } = getPageQuery();
       if (window.location.pathname !== '/user/login' && !redirect) {
         history.replace({
           pathname: '/user/login',
@@ -55,8 +64,8 @@ const Model = {
   },
   reducers: {
     changeLoginStatus(state, { payload }) {
-      setAuthority(payload.currentAuthority);
-      return { ...state, status: payload.status, type: payload.type };
+      setAuthority(payload.userName);
+      return { ...state, ...payload, type: payload.type };
     },
   },
 };
