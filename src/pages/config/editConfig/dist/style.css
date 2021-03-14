@@ -1,0 +1,10 @@
+.container {
+  padding: 20px;
+  background-color: #fff;
+}
+.container .game_select {
+  width: 100%;
+}
+.container .item {
+  margin-top: 10px;
+}

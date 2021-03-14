@@ -113,6 +113,16 @@ export default [
                 name: '游戏列表',
                 component: './config/game',
               },
+              {
+                path: '/config/gameList',
+                name: '游戏配置',
+                component: './config/game/list',
+              },
+              {
+                path: '/config/editGameConfig',
+                name: '编辑游戏配置',
+                component: './config/editConfig/editGameConfig',
+              },
             ],
           },
           {
