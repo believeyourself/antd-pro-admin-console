@@ -4,7 +4,6 @@ const configBaseUrl =
     ? 'https://api.didabu.com/Prod'
     : 'https://ll4tscl8ad.execute-api.cn-northwest-1.amazonaws.com.cn/Prod';
 
-console.log(111, REACT_APP_ENV);
 export async function getGames() {
   return request.get('/config', { params: { key: 'games' } });
 }

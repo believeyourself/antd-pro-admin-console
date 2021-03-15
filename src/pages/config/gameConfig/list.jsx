@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { connect, Link } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
-import ProTable from '@ant-design/pro-table';
+import { Table } from 'antd';
 
 const GameConfig = (props) => {
   const { apps = [], dispatch, loading } = props;
@@ -34,13 +34,7 @@ const GameConfig = (props) => {
 
   return (
     <PageContainer>
-      <ProTable
-        loading={loading}
-        search={false}
-        pagination={false}
-        dataSource={apps}
-        columns={columns}
-      ></ProTable>
+      <Table loading={loading} pagination={false} dataSource={apps} columns={columns}></Table>
     </PageContainer>
   );
 };

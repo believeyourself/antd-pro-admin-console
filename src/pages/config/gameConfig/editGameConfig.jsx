@@ -45,7 +45,7 @@ const GameConfig = ({
 
   const saveEventsCount = () => {
     dispatch({
-      type: 'config/saveEventsCountSetting',
+      type: 'config/saveEventsCount',
       payload: {
         id: id,
         eventCounters: eventCounters,
