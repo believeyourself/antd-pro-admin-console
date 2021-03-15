@@ -17,13 +17,12 @@ const LoginMessage = ({ content }) => (
 );
 
 const Login = (props) => {
-  const { userLogin = {}, submitting } = props;
+  const { userLogin = {}, submitting, dispatch } = props;
   const { status, type: loginType } = userLogin;
   const [autoLogin, setAutoLogin] = useState(true);
   const [type, setType] = useState('account');
 
   const handleSubmit = (values) => {
-    const { dispatch } = props;
     dispatch({
       type: 'login/login',
       payload: { ...values, type },

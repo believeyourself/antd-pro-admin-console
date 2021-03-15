@@ -1,6 +1,6 @@
 import { queryCurrent } from '@/services/admin';
 const UserModel = {
-  namespace: 'user',
+  namespace: 'admin',
   state: {
     currentUser: {},
   },

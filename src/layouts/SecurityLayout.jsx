@@ -32,7 +32,7 @@ class SecurityLayout extends React.Component {
   }
 }
 
-export default connect(({ user, loading }) => ({
-  currentUser: user.currentUser,
+export default connect(({ admin, loading }) => ({
+  currentUser: admin.currentUser,
   loading: loading.models.user,
 }))(SecurityLayout);

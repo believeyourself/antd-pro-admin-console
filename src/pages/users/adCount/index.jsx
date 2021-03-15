@@ -38,7 +38,26 @@ function AdCount({ dispatch, gameType, adCount }) {
       </Card>
 
       <Card title="功能点广告次数分布">
-        <div className={style.chart_container}></div>
+        <div className={style.chart_container}>
+          <Chart
+            scale={{
+              count: {
+                alias: '广告次数',
+                type: 'cat',
+              },
+              users: {
+                alias: '用户数',
+              },
+            }}
+            placeholder
+            autoFit
+            data={data}
+          >
+            <Axis name="count" title={true} />
+            <Axis name="users" title={true} />
+            <Interval position="count*users" />
+          </Chart>
+        </div>
       </Card>
     </PageContainer>
   );

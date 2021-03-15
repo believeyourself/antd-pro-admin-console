@@ -11,6 +11,9 @@ export default defineConfig({
   dva: {
     hmr: true,
   },
+  define: {
+    REACT_APP_ENV: process.env.NODE_ENV || '',
+  },
   locale: {
     // // default zh-CN
     // default: 'zh-CN',
