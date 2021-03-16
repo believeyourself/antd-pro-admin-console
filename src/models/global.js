@@ -3,16 +3,27 @@ const GlobalModel = {
   namespace: 'global',
   state: {
     gameType: null,
+    didabuId: null,
     games: [],
     collapsed: false,
   },
   effects: {
-    *selectGameType({ gameType }, { put }) {
+    *selectGameType({ gameType }, { put, select }) {
+      let games = yield select(({ global }) => {
+        return global.games;
+      });
+
+      let targetGame = games.find((game) => {
+        return game.value == gameType;
+      });
+
       yield put({
         type: 'gameTypeChange',
         gameType: gameType,
+        didabuId: targetGame.didabuId,
       });
     },
+
     *initGames(_, { put, call }) {
       const { data = {} } = yield call(getGames);
       yield put({
@@ -22,8 +33,8 @@ const GlobalModel = {
     },
   },
   reducers: {
-    gameTypeChange(state, { gameType }) {
-      return { ...state, gameType };
+    gameTypeChange(state, { gameType, didabuId }) {
+      return { ...state, gameType, didabuId };
     },
     setGames(state, { games }) {
       return { ...state, games };

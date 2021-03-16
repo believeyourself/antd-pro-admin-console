@@ -23,13 +23,17 @@ const GameConfig = (props) => {
       title: 'name',
       dataIndex: 'name',
     },
+    {
+      title: 'didabuId',
+      dataIndex: 'didabuId',
+    },
   ];
 
   let dataSource = games.map((e) => {
     let name = e.name;
     let id = e.value.split('#')[0];
     let platform = e.value.split('#')[1];
-    return { name, id, platform, key: e.value };
+    return { name, id, platform, key: e.value, didabuId: e.didabuId };
   });
 
   const handleOk = async (e) => {

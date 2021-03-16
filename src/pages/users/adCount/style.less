@@ -1,9 +1,28 @@
-.chart_container {
-  width: 100%;
-  height: 300px;
-}
+@containerPadding: 24px;
+@fontSize: 16px;
 
-.filter_container {
-  background-color: #fff;
-  padding: 20px;
+.container {
+  font-size: @fontSize;
+
+  .chart_container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 300px;
+  }
+
+  .filter_container {
+    background-color: #ffffff;
+    padding: @containerPadding;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .content {
+    background-color: #ffffff;
+    padding: @containerPadding;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 }
