@@ -6,7 +6,7 @@ const UsersModel = {
   },
   effects: {
     *queryAdCount({ appId, date }, { call, put }) {
-      let { data = [] } = yield call(queryAdCount, appId, date);
+      let { data = {} } = yield call(queryAdCount, appId, date);
       yield put({
         type: 'adCountRefresh',
         adCount: {

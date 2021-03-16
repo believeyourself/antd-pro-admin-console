@@ -72,34 +72,34 @@ export default [
                 component: './dailyReport/retention/retentionDetail',
                 hideInMenu: true,
               },
-              {
-                path: '/dailyReport/events',
-                name: '事件',
-                component: './dailyReport/events',
-              },
+              // {
+              //   path: '/dailyReport/events',
+              //   name: '事件',
+              //   component: './dailyReport/events',
+              // },
             ],
           },
           {
             path: '/users',
-            name: '玩家数据',
+            name: '游戏数据',
             icon: 'User',
-            authority: ['admin', 'operator'],
+            // authority: ['admin', 'operator'],
             routes: [
-              {
-                path: '/users/userList',
-                name: '玩家查询',
-                component: './users/userList',
-              },
+              // {
+              //   path: '/users/userList',
+              //   name: '玩家查询',
+              //   component: './users/userList',
+              // },
               {
                 path: '/users/adCount',
                 name: '广告次数',
                 component: './users/adCount',
               },
-              {
-                path: '/users/onlineUserCount',
-                name: '在线统计',
-                component: './users/onlineUserCount',
-              },
+              // {
+              //   path: '/users/onlineUserCount',
+              //   name: '在线统计',
+              //   component: './users/onlineUserCount',
+              // },
             ],
           },
           {
@@ -113,17 +113,17 @@ export default [
                 name: '游戏列表',
                 component: './config/game',
               },
-              {
-                path: '/config/gameConfig',
-                name: '游戏配置',
-                component: './config/gameConfig/list',
-              },
-              {
-                path: '/config/gameConfig/edit/:id',
-                name: '编辑游戏配置',
-                component: './config/gameConfig/editGameConfig',
-                hideInMenu: true,
-              },
+              // {
+              //   path: '/config/gameConfig',
+              //   name: '游戏配置',
+              //   component: './config/gameConfig/list',
+              // },
+              // {
+              //   path: '/config/gameConfig/edit/:id',
+              //   name: '编辑游戏配置',
+              //   component: './config/gameConfig/editGameConfig',
+              //   hideInMenu: true,
+              // },
             ],
           },
           {

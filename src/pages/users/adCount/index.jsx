@@ -27,9 +27,9 @@ function AdCount({ dispatch, didabuId, adCount, adCountLoading }) {
   const yesterday = dayjs.utc().subtract(1, 'd');
   const [date, setDate] = useState(yesterday);
   const dateFormat = date.format('YYYY-MM-DD');
-  let data = adCount[`${didabuId}_${dateFormat}`];
+  let { userAdCount, gameAdCount } = adCount[`${didabuId}_${dateFormat}`] || {};
   useEffect(() => {
-    if (didabuId && !data) {
+    if (didabuId && !userAdCount) {
       dispatch({
         type: 'users/queryAdCount',
         appId: didabuId,
@@ -40,17 +40,19 @@ function AdCount({ dispatch, didabuId, adCount, adCountLoading }) {
 
   const dangerUserCount = useMemo(() => {
     let count = 0;
-    if (Array.isArray(data)) {
-      for (let i = 0; i < data.length; ++i) {
-        data[i].count = String(data[i].count);
-        if (data[i].count > 60) {
-          count += data[i].users;
+    let adCount = 0;
+    if (Array.isArray(userAdCount)) {
+      for (let i = 0; i < userAdCount.length; ++i) {
+        adCount += userAdCount[i].count * userAdCount[i].users;
+        userAdCount[i].count = String(userAdCount[i].count);
+        if (userAdCount[i].count > 60) {
+          count += userAdCount[i].users;
         }
       }
     }
 
     return count;
-  }, [data]);
+  }, [userAdCount]);
 
   return (
     <PageContainer className={style.container}>
@@ -68,10 +70,14 @@ function AdCount({ dispatch, didabuId, adCount, adCountLoading }) {
         <span>广告次数超60次人数：{dangerUserCount}</span>
       </div>
       <Card
-        title="用户广告次数分布"
+        title="用户广告次数"
         extra={
           <>
-            <Button disabled={!data || data.length == 0} onClick={exportExcel} type="primary">
+            <Button
+              disabled={!userAdCount || userAdCount.length == 0}
+              onClick={exportExcel}
+              type="primary"
+            >
               导出CSV
             </Button>
           </>
@@ -94,11 +100,39 @@ function AdCount({ dispatch, didabuId, adCount, adCountLoading }) {
               }}
               placeholder
               autoFit
-              data={data}
+              data={userAdCount}
             >
               <Axis name="count" title={true} />
               <Axis name="users" title={true} />
               <Interval position="count*users" />
+            </Chart>
+          )}
+        </div>
+      </Card>
+
+      <Card title="功能点广告次数">
+        <div className={style.chart_container}>
+          {adCountLoading ? (
+            <Spin />
+          ) : (
+            <Chart
+              loading={adCountLoading}
+              scale={{
+                feature: {
+                  alias: '事件',
+                  type: 'cat',
+                },
+                ad_count: {
+                  alias: '广告次数',
+                },
+              }}
+              placeholder
+              autoFit
+              data={gameAdCount}
+            >
+              <Axis name="feature" title={true} />
+              <Axis name="ad_count" title={true} />
+              <Interval position="feature*ad_count" />
             </Chart>
           )}
         </div>
