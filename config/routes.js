@@ -113,17 +113,17 @@ export default [
                 name: '游戏列表',
                 component: './config/game',
               },
-              // {
-              //   path: '/config/gameConfig',
-              //   name: '游戏配置',
-              //   component: './config/gameConfig/list',
-              // },
-              // {
-              //   path: '/config/gameConfig/edit/:id',
-              //   name: '编辑游戏配置',
-              //   component: './config/gameConfig/editGameConfig',
-              //   hideInMenu: true,
-              // },
+              {
+                path: '/config/gameConfig',
+                name: '游戏配置',
+                component: './config/gameConfig/list',
+              },
+              {
+                path: '/config/gameConfig/edit/:id',
+                name: '编辑游戏配置',
+                component: './config/gameConfig/editGameConfig',
+                hideInMenu: true,
+              },
             ],
           },
           {

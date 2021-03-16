@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { connect, useParams } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Button, Input, Row, Col, Divider, message } from 'antd';
+import { Button, Input, Row, Col, Divider, message, Modal } from 'antd';
+import ReactJson from 'react-json-view';
 import style from './style.less';
 
 const GameConfig = ({
@@ -22,6 +23,8 @@ const GameConfig = ({
   const [assetEventNames, setAssetEventNames] = useState();
   const [controlData, setControlData] = useState();
   const [appName, setAppName] = useState();
+  const [controlDataKey, setControlDataKey] = useState();
+  const [previewJson, setPreviewJson] = useState(false);
 
   useEffect(() => {
     if (!apps) {
@@ -100,18 +103,14 @@ const GameConfig = ({
       let updateControlData = controlData ? JSON.parse(controlData) : {};
       let fileReader = new FileReader();
       fileReader.onloadend = function (evt) {
-        if (file.name.match(/\.csv$/)) {
-          updateControlData.csv = evt.target.result;
-          setControlData(JSON.stringify(updateControlData));
-        } else if (file.name.match(/\.txt$/)) {
-          updateControlData.json = evt.target.result;
+        if (controlDataKey) {
+          updateControlData[controlDataKey] = evt.target.result;
           setControlData(JSON.stringify(updateControlData));
         } else {
+          message.error('请先输入文件KEY值');
           fileRef.current.value = null;
-          message.error('只能上传txt和csv文件');
         }
       };
-      // 包含中文内容用gbk编码
       fileReader.readAsText(file);
     }
   };
@@ -207,12 +206,24 @@ const GameConfig = ({
             控制数值:
           </Col>
           <Col {...inputCol}>
-            <Input value={controlData} onChange={(e) => setControlData(e.target.value)} />
+            <Input value={controlData} disabled />
+          </Col>
+          <Col {...buttonCol}>
+            <Button onClick={() => setPreviewJson(true)} type="primary">
+              浏览
+            </Button>
           </Col>
         </Row>
         <Row className={style.item}>
           <Col {...noBabelCol}>
-            <input ref={fileRef} type="file" onChange={readFile} />
+            <Row>
+              <Col span="4">
+                <Input value={controlDataKey} onChange={(e) => setControlDataKey(e.target.value)} />
+              </Col>
+              <Col span="12" offset="1">
+                <input className={style.input_file} ref={fileRef} type="file" onChange={readFile} />
+              </Col>
+            </Row>
           </Col>
           <Col {...buttonCol}>
             <Button loading={controlDataLoading} onClick={saveControlData} type="primary">
@@ -220,6 +231,23 @@ const GameConfig = ({
             </Button>
           </Col>
         </Row>
+        <Modal
+          title="control data"
+          cancelText="关闭"
+          centered
+          onCancel={() => setPreviewJson(false)}
+          visible={previewJson}
+          footer={null}
+          width="80%"
+        >
+          <div className={style.json_view_container}>
+            <ReactJson
+              displayDataTypes={false}
+              name={false}
+              src={controlData ? JSON.parse(controlData) : {}}
+            ></ReactJson>
+          </div>
+        </Modal>
       </div>
     </PageContainer>
   );
