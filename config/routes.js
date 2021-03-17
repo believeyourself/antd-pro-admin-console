@@ -4,7 +4,7 @@ export default [
     component: '../layouts/SecurityLayout',
     routes: [
       {
-        path: '/user',
+        path: '/admin',
         component: '../layouts/UserLayout',
         routes: [
           {

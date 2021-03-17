@@ -27,3 +27,17 @@ export function setAuthority(authority) {
   localStorage.setItem('data-platform-authority', JSON.stringify(proAuthority));
   reloadAuthorized();
 }
+
+export function setJwtInfo(obj) {
+  if (Object.prototype.toString.call(obj) === '[object Object]') {
+    localStorage.setItem('admin-console-jwt', JSON.stringify(obj));
+  }
+}
+export function getJwtInfo() {
+  let jwtInfo = localStorage.getItem('admin-console-jwt');
+  if (jwtInfo) {
+    return JSON.parse(jwtInfo);
+  }
+
+  return null;
+}

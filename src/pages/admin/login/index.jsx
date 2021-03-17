@@ -18,7 +18,7 @@ const LoginMessage = ({ content }) => (
 
 const Login = (props) => {
   const { userLogin = {}, submitting, dispatch } = props;
-  const { status, type: loginType } = userLogin;
+  const { status } = userLogin;
   const [autoLogin, setAutoLogin] = useState(true);
   const [type, setType] = useState('account');
 
@@ -33,23 +33,20 @@ const Login = (props) => {
     <div className={styles.main}>
       <LoginForm activeKey={type} onTabChange={setType} onSubmit={handleSubmit}>
         <Tab key="account" tab="账户密码登录">
-          {status === 'error' && loginType === 'account' && !submitting && (
-            <LoginMessage content="账户或密码错误（admin/ant.design）" />
-          )}
-
+          {status === 'error' && !submitting && <LoginMessage content="账户或密码错误" />}
           <UserName
-            name="userName"
-            placeholder="用户名: admin or operator"
+            name="email"
+            placeholder="邮箱"
             rules={[
               {
                 required: true,
-                message: '请输入用户名!',
+                message: '请输入邮箱!',
               },
             ]}
           />
           <Password
             name="password"
-            placeholder="密码: didabu"
+            placeholder="密码 "
             rules={[
               {
                 required: true,
@@ -58,11 +55,11 @@ const Login = (props) => {
             ]}
           />
         </Tab>
-        <div>
+        {/* <div>
           <Checkbox checked={autoLogin} onChange={(e) => setAutoLogin(e.target.checked)}>
             自动登录
           </Checkbox>
-        </div>
+        </div> */}
         <Submit loading={submitting}>登录</Submit>
       </LoginForm>
     </div>

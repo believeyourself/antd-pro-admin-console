@@ -2,8 +2,9 @@
  * request 网络请求工具
  * 更详细的 api 文档: https://github.com/umijs/umi-request
  */
-import { extend } from 'umi-request';
+import request, { extend } from 'umi-request';
 import { notification } from 'antd';
+import { getJwtInfo } from '@/utils/authority';
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
   201: '新建或修改数据成功。',
@@ -21,6 +22,13 @@ const codeMessage = {
   503: '服务不可用，服务器暂时过载或维护。',
   504: '网关超时。',
 };
+const jwtInfo = getJwtInfo();
+const token = jwtInfo ? jwtInfo.jwt : '';
+const headers = {
+  'Content-Type': 'application/json',
+  Authorization: `Bear ${token}`,
+};
+
 /**
  * 异常处理程序
  */
@@ -30,7 +38,7 @@ const errorHandler = (error) => {
 
   if (response && response.status) {
     const errorText = codeMessage[response.status] || response.statusText;
-    const { status, url } = response;
+    const { status } = response;
     notification.error({
       message: `请求错误 ${status}`,
       description: errorText,
@@ -44,16 +52,46 @@ const errorHandler = (error) => {
 
   return response;
 };
+
+/**
+ *  中间件
+ */
+
+request.use(
+  async (ctx, next) => {
+    await next();
+    if (ctx.res && ctx.res.code === 401) {
+      notification.error({
+        description: `${ctx.res.message},请重新登录`,
+        message: '登录异常',
+      });
+      window.location.hash = '/admin/login';
+    }
+  },
+  { global: true },
+);
+
 /**
  * 配置request请求时的默认参数
  */
 
-const request = extend({
+const commonRequest = extend({
   errorHandler,
+  headers,
   prefix: 'https://lmm0p2w6k0.execute-api.us-west-2.amazonaws.com/dev',
 });
-export default request;
+export default commonRequest;
 
 export const requestWithoutPrefix = extend({
+  headers,
+  errorHandler,
+});
+
+export const didabuCoreRequest = extend({
+  headers,
+  prefix:
+    REACT_APP_ENV === 'production'
+      ? 'https://api.didabu.com/Prod'
+      : 'https://ll4tscl8ad.execute-api.cn-northwest-1.amazonaws.com.cn/Prod',
   errorHandler,
 });

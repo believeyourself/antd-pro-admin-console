@@ -1,8 +1,4 @@
-import request, { requestWithoutPrefix } from '@/utils/request';
-const configBaseUrl =
-  REACT_APP_ENV === 'production'
-    ? 'https://api.didabu.com/Prod'
-    : 'https://ll4tscl8ad.execute-api.cn-northwest-1.amazonaws.com.cn/Prod';
+import request, { didabuCoreRequest } from '@/utils/request';
 
 export async function getGames() {
   return request.get('/config', { params: { key: 'games' } });
@@ -19,7 +15,7 @@ export async function saveEventsCount(params) {
     params.eventCounters = JSON.parse(params.eventCounters);
   }
 
-  return requestWithoutPrefix.put(configBaseUrl + '/application/eventCounter', {
+  return didabuCoreRequest.put('/application/eventCounter', {
     body: JSON.stringify(params),
   });
 }
@@ -31,7 +27,7 @@ export async function saveABGroup(params) {
     params.abGroupEvents = JSON.parse(params.abGroupEvents);
   }
 
-  return requestWithoutPrefix.put(configBaseUrl + '/application/abGroup', {
+  return didabuCoreRequest.put('/application/abGroup', {
     body: JSON.stringify(params),
   });
 }
@@ -41,12 +37,12 @@ export async function saveDidabuEvents(params) {
   } else {
     params.didabuEvents = JSON.parse(params.didabuEvents);
   }
-  return requestWithoutPrefix.put(configBaseUrl + '/application/didabuEvent', {
+  return didabuCoreRequest.put('/application/didabuEvent', {
     body: JSON.stringify(params),
   });
 }
 export async function queryAppList() {
-  return requestWithoutPrefix.get(configBaseUrl + '/application/configs');
+  return didabuCoreRequest.get('/application/configs');
 }
 
 export async function saveAssetEvents(params) {
@@ -56,7 +52,7 @@ export async function saveAssetEvents(params) {
     params.assetChangedEvents = JSON.parse(params.assetChangedEvents);
   }
 
-  return requestWithoutPrefix.put(configBaseUrl + '/application/asset', {
+  return didabuCoreRequest.put('/application/asset', {
     body: JSON.stringify(params),
   });
 }
@@ -66,7 +62,7 @@ export async function saveControlData(params) {
     params.controlData = {};
   }
 
-  return requestWithoutPrefix.put(configBaseUrl + '/application/controlData', {
+  return didabuCoreRequest.put('/application/controlData', {
     body: JSON.stringify(params),
   });
 }

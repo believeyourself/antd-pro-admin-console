@@ -1,6 +1,7 @@
 import React from 'react';
 import { PageLoading } from '@ant-design/pro-layout';
 import { Redirect, connect } from 'umi';
+import { getJwtInfo } from '@/utils/authority';
 
 class SecurityLayout extends React.Component {
   state = {
@@ -8,6 +9,10 @@ class SecurityLayout extends React.Component {
   };
 
   componentDidMount() {
+    let adminInfo = getJwtInfo();
+    if (adminInfo && adminInfo.jwt) {
+      this.props.dispatch({ type: 'admin/saveCurrentUser', payload: adminInfo });
+    }
     this.setState({
       isReady: true,
     });
@@ -15,17 +20,14 @@ class SecurityLayout extends React.Component {
 
   render() {
     const { isReady } = this.state;
-    const { children, loading, currentUser } = this.props;
-
-    // 你可以把它替换成你自己的登录认证规则（比如判断 token 是否存在）
-    const isLogin = true; //currentUser && currentUser.userId;
+    const { children, loading, isLogin } = this.props;
 
     if ((!isLogin && loading) || !isReady) {
       return <PageLoading />;
     }
 
-    if (!isLogin && !window.location.hash.startsWith('#/user/login')) {
-      return <Redirect to={`/user/login`} />;
+    if (!isLogin && !window.location.hash.startsWith('#/admin/login')) {
+      return <Redirect to={`/admin/login`} />;
     }
 
     return children;
@@ -33,6 +35,6 @@ class SecurityLayout extends React.Component {
 }
 
 export default connect(({ admin, loading }) => ({
-  currentUser: admin.currentUser,
+  isLogin: !!admin.jwt,
   loading: loading.models.user,
 }))(SecurityLayout);

@@ -1,10 +1,6 @@
-import request from '@/utils/request';
+import { didabuCoreRequest } from '@/utils/request';
 export async function fakeAccountLogin(params) {
-  return request('/api/login/account', {
-    method: 'POST',
-    data: params,
+  return didabuCoreRequest.post('/account/login', {
+    body: JSON.stringify(params),
   });
-}
-export async function getFakeCaptcha(mobile) {
-  return request(`/api/login/captcha?mobile=${mobile}`);
 }

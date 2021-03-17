@@ -24,6 +24,7 @@ export default defineConfig({
   dynamicImport: {
     loading: '@/components/PageLoading/index',
   },
+  // devtool: process.env.NODE_ENV === 'production' ? false : 'source-map',
   externals: {
     bizcharts: 'BizCharts',
     react: 'React',
