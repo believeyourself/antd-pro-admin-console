@@ -11,9 +11,6 @@ export default defineConfig({
   dva: {
     hmr: true,
   },
-  define: {
-    REACT_APP_ENV: process.env.NODE_ENV || '',
-  },
   locale: {
     // // default zh-CN
     // default: 'zh-CN',
@@ -45,7 +42,6 @@ export default defineConfig({
   targets: {
     ie: 11,
   },
-  // umi routes: https://umijs.org/docs/routing
   routes: routes,
   // Theme for antd: https://ant.design/docs/react/customize-theme-cn
   theme: {

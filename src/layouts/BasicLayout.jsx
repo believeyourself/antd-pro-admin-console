@@ -6,6 +6,7 @@ import React, { useEffect, useMemo, useRef } from 'react';
 import { Link, connect, history } from 'umi';
 import { Result, Button, Select } from 'antd';
 import Authorized from '@/utils/Authorized';
+import RightContent from '@/components/GlobalHeader/RightContent';
 import { getMatchMenu } from '@umijs/route-utils';
 import logo from '../assets/logo.svg';
 
@@ -121,6 +122,7 @@ const BasicLayout = (props) => {
           <span>{route.breadcrumbName}</span>
         );
       }}
+      rightContentRender={() => <RightContent />}
       menuDataRender={menuDataRender}
       menuExtraRender={gameSelectRender}
       postMenuData={(menuData) => {

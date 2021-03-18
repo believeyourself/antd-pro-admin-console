@@ -41,3 +41,7 @@ export function getJwtInfo() {
 
   return null;
 }
+
+export function clearJwtInfo(obj) {
+  localStorage.removeItem('admin-console-jwt');
+}

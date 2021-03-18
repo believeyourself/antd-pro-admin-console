@@ -1,5 +1,5 @@
-import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar, Menu, Spin } from 'antd';
+import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
+import { Avatar, Menu } from 'antd';
 import React from 'react';
 import { history, connect } from 'umi';
 import HeaderDropdown from '../HeaderDropdown';
@@ -9,72 +9,53 @@ class AvatarDropdown extends React.Component {
   onMenuClick = (event) => {
     const { key } = event;
 
+    console.log(111);
     if (key === 'logout') {
       const { dispatch } = this.props;
 
       if (dispatch) {
         dispatch({
-          type: 'login/logout',
+          type: 'admin/logout',
         });
       }
 
       return;
     }
 
-    history.push(`/account/${key}`);
+    history.push(`/admin/${key}`);
   };
 
   render() {
     const {
-      currentUser = {
-        avatar: '',
-        name: '',
+      admin = {
+        userHead: '',
+        userName: '',
       },
-      menu,
     } = this.props;
     const menuHeaderDropdown = (
       <Menu className={styles.menu} selectedKeys={[]} onClick={this.onMenuClick}>
-        {menu && (
-          <Menu.Item key="center">
-            <UserOutlined />
-            个人中心
-          </Menu.Item>
-        )}
-        {menu && (
-          <Menu.Item key="settings">
-            <SettingOutlined />
-            个人设置
-          </Menu.Item>
-        )}
-        {menu && <Menu.Divider />}
-
         <Menu.Item key="logout">
           <LogoutOutlined />
           退出登录
         </Menu.Item>
       </Menu>
     );
-    return currentUser && currentUser.name ? (
+    return (
       <HeaderDropdown overlay={menuHeaderDropdown}>
         <span className={`${styles.action} ${styles.account}`}>
-          <Avatar size="small" className={styles.avatar} src={currentUser.avatar} alt="avatar" />
-          <span className={`${styles.name} anticon`}>{currentUser.name}</span>
+          <Avatar
+            size="small"
+            className={styles.avatar}
+            src={admin.userHead && admin.userHead != '' ? admin.userHead : null}
+            icon={<UserOutlined />}
+          />
+          <span className={`${styles.name} anticon`}>{admin.userName}</span>
         </span>
       </HeaderDropdown>
-    ) : (
-      <span className={`${styles.action} ${styles.account}`}>
-        <Spin
-          size="small"
-          style={{
-            marginLeft: 8,
-            marginRight: 8,
-          }}
-        />
-      </span>
     );
   }
 }
 
-export default connect(({ user }) => ({
-  currentUser: user.currentUser,
+export default connect(({ admin }) => ({
+  admin: admin,
 }))(AvatarDropdown);

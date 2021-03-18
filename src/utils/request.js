@@ -26,7 +26,7 @@ const jwtInfo = getJwtInfo();
 const token = jwtInfo ? jwtInfo.jwt : '';
 const headers = {
   'Content-Type': 'application/json',
-  Authorization: `Bear ${token}`,
+  Authorization: `Bearer ${token}`,
 };
 
 /**
@@ -86,7 +86,7 @@ export const requestWithoutPrefix = extend({
   headers,
   errorHandler,
 });
-
+console.log(REACT_APP_ENV);
 export const didabuCoreRequest = extend({
   headers,
   prefix:

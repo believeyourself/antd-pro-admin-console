@@ -1,4 +1,4 @@
-import { Alert, Checkbox } from 'antd';
+import { Alert } from 'antd';
 import React, { useState } from 'react';
 import { connect } from 'umi';
 import LoginForm from './components/Login';
@@ -19,12 +19,11 @@ const LoginMessage = ({ content }) => (
 const Login = (props) => {
   const { userLogin = {}, submitting, dispatch } = props;
   const { status } = userLogin;
-  const [autoLogin, setAutoLogin] = useState(true);
   const [type, setType] = useState('account');
 
   const handleSubmit = (values) => {
     dispatch({
-      type: 'login/login',
+      type: 'admin/login',
       payload: { ...values, type },
     });
   };
@@ -33,7 +32,7 @@ const Login = (props) => {
     <div className={styles.main}>
       <LoginForm activeKey={type} onTabChange={setType} onSubmit={handleSubmit}>
         <Tab key="account" tab="账户密码登录">
-          {status === 'error' && !submitting && <LoginMessage content="账户或密码错误" />}
+          {status === 'error' && <LoginMessage content="账户或密码错误" />}
           <UserName
             name="email"
             placeholder="邮箱"
@@ -55,18 +54,13 @@ const Login = (props) => {
             ]}
           />
         </Tab>
-        {/* <div>
-          <Checkbox checked={autoLogin} onChange={(e) => setAutoLogin(e.target.checked)}>
-            自动登录
-          </Checkbox>
-        </div> */}
         <Submit loading={submitting}>登录</Submit>
       </LoginForm>
     </div>
   );
 };
 
-export default connect(({ login, loading }) => ({
-  userLogin: login,
-  submitting: loading.effects['login/login'],
+export default connect(({ admin, loading }) => ({
+  userLogin: admin,
+  submitting: loading.effects['admin/login'],
 }))(Login);

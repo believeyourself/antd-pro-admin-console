@@ -1,3 +1,4 @@
+// umi routes: https://umijs.org/docs/routing
 export default [
   {
     path: '/',
