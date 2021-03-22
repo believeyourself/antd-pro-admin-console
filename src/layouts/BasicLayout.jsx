@@ -105,8 +105,8 @@ const BasicLayout = (props) => {
         if (menuItemProps.isUrl || !menuItemProps.path) {
           return defaultDom;
         }
-
-        return <Link to={menuItemProps.path}>{defaultDom}</Link>;
+        let path = menuItemProps.path.replace(/\/:[a-zA-Z0-9]*\?/, '');
+        return <Link to={path}>{defaultDom}</Link>;
       }}
       breadcrumbRender={(routers = []) => [...routers]}
       itemRender={(route, params, routes, paths) => {

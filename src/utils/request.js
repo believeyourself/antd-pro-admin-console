@@ -100,7 +100,7 @@ export const didabuCoreRequest = extend({
   headers,
   prefix:
     REACT_APP_ENV === 'production'
-      ? 'https://api.didabu.com/Prod'
+      ? 'https://api.didabu.com'
       : 'https://ll4tscl8ad.execute-api.cn-northwest-1.amazonaws.com.cn/Prod',
   errorHandler,
 });
