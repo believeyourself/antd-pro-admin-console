@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { connect } from 'umi';
+import { connect, useParams } from 'umi';
 import { Chart, Interval, Axis } from 'bizcharts';
 import { Card, Button, Spin } from 'antd';
 import { PageContainer } from '@ant-design/pro-layout';
@@ -22,10 +22,15 @@ const exportExcel = function () {
   let toExcel = new ExportJsonExcel(option);
   toExcel.saveExcel();
 };
+const labelFormatter = function (text) {
+  return text.replace('ad_success_', '');
+};
+const yesterday = dayjs.utc().subtract(1, 'd');
 
 function AdCount({ dispatch, didabuId, adCount, adCountLoading }) {
-  const yesterday = dayjs.utc().subtract(1, 'd');
-  const [date, setDate] = useState(yesterday);
+  const params = useParams();
+  const initData = params.date ? dayjs.utc(Number(params.date)) : yesterday;
+  const [date, setDate] = useState(initData);
   const dateFormat = date.format('YYYY-MM-DD');
   let { userAdCount, gameAdCount } = adCount[`${didabuId}_${dateFormat}`] || {};
   useEffect(() => {
@@ -130,7 +135,7 @@ function AdCount({ dispatch, didabuId, adCount, adCountLoading }) {
               autoFit
               data={gameAdCount}
             >
-              <Axis name="feature" title={true} />
+              <Axis name="feature" title={true} label={{ formatter: labelFormatter }} />
               <Axis name="ad_count" title={true} />
               <Interval position="feature*ad_count" />
             </Chart>

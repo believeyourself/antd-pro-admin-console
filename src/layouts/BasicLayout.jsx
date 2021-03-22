@@ -108,13 +108,7 @@ const BasicLayout = (props) => {
 
         return <Link to={menuItemProps.path}>{defaultDom}</Link>;
       }}
-      breadcrumbRender={(routers = []) => [
-        {
-          path: '/',
-          breadcrumbName: '首页',
-        },
-        ...routers,
-      ]}
+      breadcrumbRender={(routers = []) => [...routers]}
       itemRender={(route, params, routes, paths) => {
         return route.component ? (
           <Link to={route.path}>{route.breadcrumbName}</Link>

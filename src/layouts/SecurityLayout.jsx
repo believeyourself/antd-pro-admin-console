@@ -6,7 +6,18 @@ import { getJwtInfo } from '@/utils/authority';
 class SecurityLayout extends React.Component {
   state = {
     isReady: false,
+    appError: false,
   };
+
+  static getDerivedStateFromError(error) {
+    return { appError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.log('app error start===============');
+    console.log(error, errorInfo);
+    console.log('app error end===============');
+  }
 
   componentDidMount() {
     let adminInfo = getJwtInfo();
@@ -19,8 +30,12 @@ class SecurityLayout extends React.Component {
   }
 
   render() {
-    const { isReady } = this.state;
+    const { isReady, appError } = this.state;
     const { children, loading, isLogin } = this.props;
+
+    if (appError) {
+      return <>Something Went Wrong!</>;
+    }
 
     if ((!isLogin && loading) || !isReady) {
       return <PageLoading />;
@@ -36,5 +51,5 @@ class SecurityLayout extends React.Component {
 
 export default connect(({ admin, loading }) => ({
   isLogin: !!admin.jwt,
-  loading: loading.models.user,
+  loading: loading.effects['admin/login'],
 }))(SecurityLayout);

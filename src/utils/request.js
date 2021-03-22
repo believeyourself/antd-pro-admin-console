@@ -82,11 +82,20 @@ const commonRequest = extend({
 });
 export default commonRequest;
 
+export const adminRequest = extend({
+  headers,
+  prefix:
+    REACT_APP_ENV === 'production'
+      ? 'https://5wrxid3t9h.execute-api.us-west-2.amazonaws.com/Prod/'
+      : 'https://5wrxid3t9h.execute-api.us-west-2.amazonaws.com/Prod/',
+  errorHandler,
+});
+
 export const requestWithoutPrefix = extend({
   headers,
   errorHandler,
 });
-console.log(REACT_APP_ENV);
+
 export const didabuCoreRequest = extend({
   headers,
   prefix:

@@ -92,7 +92,7 @@ export default [
               //   component: './users/userList',
               // },
               {
-                path: '/users/adCount',
+                path: '/users/adCount/:date?',
                 name: '广告次数',
                 component: './users/adCount',
               },
