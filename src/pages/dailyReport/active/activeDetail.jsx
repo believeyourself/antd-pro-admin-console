@@ -4,7 +4,8 @@ import { PageContainer } from '@ant-design/pro-layout';
 import { queryDetail } from './service';
 import { SearchOutlined } from '@ant-design/icons';
 import { dayjs } from '@/utils/utils';
-import { Table, Select, Row, Col, Button, DatePicker } from 'antd';
+import { Table, Select, Row, Col, Button } from 'antd';
+import DatePicker from '@/components/DatePicker';
 import config from '../../../../config/platformConfig';
 const Option = Select.Option;
 

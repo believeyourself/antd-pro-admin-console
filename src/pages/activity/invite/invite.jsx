@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { Form, DatePicker, Input, Button, Card, Row, Col, Space, Table, Modal } from 'antd';
+import { Form, Input, Button, Card, Row, Col, Space, Table, Modal } from 'antd';
+import DatePicker from '@/components/DatePicker';
 import { PageContainer } from '@ant-design/pro-layout';
 import { dayjs } from '@/utils/utils';
 import { queryData } from './service';

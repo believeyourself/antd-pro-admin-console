@@ -3,7 +3,8 @@ import { connect } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import { queryRoiReport } from './service';
 import { Chart, Line, Slider } from 'bizcharts';
-import { Row, Col, Button, DatePicker, Divider, Spin } from 'antd';
+import { Row, Col, Button, Divider, Spin } from 'antd';
+import DatePicker from '@/components/DatePicker';
 import { SearchOutlined } from '@ant-design/icons';
 import { dayjs } from '@/utils/utils';
 
