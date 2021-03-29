@@ -6,7 +6,7 @@ import ProTable from '@ant-design/pro-table';
 import ProDescriptions from '@ant-design/pro-descriptions';
 import { queryRoiReport } from './service';
 
-const TableList = (props) => {
+const Active = (props) => {
   const { gameType } = props;
   const actionRef = useRef();
   const [collapsed, setCollapsed] = useState(false);
@@ -155,4 +155,4 @@ const TableList = (props) => {
 
 export default connect(({ global }) => ({
   gameType: global.gameType,
-}))(TableList);
+}))(Active);

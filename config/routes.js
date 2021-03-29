@@ -91,9 +91,20 @@ export default [
               //   component: './users/userList',
               // },
               {
-                path: '/users/adCount/:date?',
+                path: '/users/adCount',
                 name: '广告次数',
                 component: './users/adCount',
+              },
+              {
+                path: '/users/exceptionAdUsers/:date?',
+                name: '广告异常用户',
+                component: './users/exceptionAdUsers',
+              },
+              {
+                path: '/users/adRecords/:accountId?/:date?',
+                name: '用户广告记录',
+                component: './users/adRecords',
+                hideInMenu: true,
               },
               // {
               //   path: '/users/onlineUserCount',
