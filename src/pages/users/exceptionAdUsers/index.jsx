@@ -3,13 +3,16 @@ import { PageContainer } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
 import { queryExceptionAdUsers } from './service';
 import { connect, useParams } from 'umi';
+import AdCount from './adCount.jsx';
 import * as moment from 'moment';
+import { Modal, Button } from 'antd';
 
 const ExceptionAdUsers = ({ didabuId }) => {
   const { date = moment.utc().subtract(1, 'd').format('YYYY-MM-DD') } = useParams();
   const ref = useRef();
   const [searchDate, setSearchDate] = useState(date);
-  const [collapsed, setCollapsed] = useState(false);
+  const [detailIndex, setDetailIndex] = useState();
+  const [data, setData] = useState([]);
   const columns = [
     {
       title: 'userId',
@@ -30,19 +33,19 @@ const ExceptionAdUsers = ({ didabuId }) => {
     },
     {
       title: '操作',
-      render: (text, row) => {
+      render: (text, row, index) => {
         return [
-          <a
-            href={`#/users/adRecords/${row.account_id}/${searchDate}`}
-            rel="noopener noreferrer"
-            key="adRecords"
-          >
-            广告记录
+          <a onClick={() => setDetailIndex(index)} key="adRecords">
+            详情
           </a>,
         ];
       },
     },
   ];
+
+  const changeDetailIndex = (step) => {
+    setDetailIndex(detailIndex + step);
+  };
 
   useEffect(() => {
     ref.current.reload();
@@ -52,27 +55,52 @@ const ExceptionAdUsers = ({ didabuId }) => {
     <PageContainer>
       <ProTable
         pagination={false}
-        search={{
-          collapsed,
-          onCollapse: setCollapsed,
-        }}
         actionRef={ref}
         rowKey="account_id"
-        request={(params, sort, filter) => {
+        request={async (params, sort, filter) => {
           if (params.date) {
             setSearchDate(params.date);
           }
 
-          return queryExceptionAdUsers({
+          let result = await queryExceptionAdUsers({
             appId: didabuId,
             ...params,
             ...sort,
             ...filter,
             date: searchDate,
           });
+
+          setData(result?.data || []);
+          return result;
         }}
         columns={columns}
       />
+      <Modal
+        title={`用户${data[detailIndex]?.account_id}---Index:${detailIndex + 1}`}
+        maskClosable
+        footer={[
+          <Button
+            disabled={detailIndex === 0}
+            onClick={() => changeDetailIndex(-1)}
+            key="previous"
+            type="primary"
+          >
+            上一个
+          </Button>,
+          <Button
+            disabled={detailIndex === data.length - 1}
+            onClick={() => changeDetailIndex(1)}
+            key="next"
+            type="primary"
+          >
+            下一个
+          </Button>,
+        ]}
+        onCancel={() => setDetailIndex(null)}
+        visible={!isNaN(detailIndex) && !!data[detailIndex]?.account_id}
+      >
+        <AdCount didabuId={didabuId} accountId={data[detailIndex]?.account_id} date={searchDate} />
+      </Modal>
     </PageContainer>
   );
 };
