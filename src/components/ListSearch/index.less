@@ -1,0 +1,19 @@
+@containerPadding: 24px;
+@fontSize: 16px;
+
+.container {
+  display: flex;
+  font-size: @fontSize;
+  background-color: #ffffff;
+  padding: @containerPadding;
+  border-bottom: 1px solid #f0f0f0;
+
+  .filters {
+    flex: 1;
+  }
+
+  .toolbars {
+    flex: 1;
+    text-align: right;
+  }
+}

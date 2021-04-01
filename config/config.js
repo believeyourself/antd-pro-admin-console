@@ -5,6 +5,7 @@ import routes from './routes';
 import proxy from './proxy';
 export default defineConfig({
   alias: {},
+  antDesignPro: false,
   history: { type: 'hash' },
   hash: true,
   antd: {},

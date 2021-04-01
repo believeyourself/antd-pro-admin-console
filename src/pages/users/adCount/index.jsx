@@ -8,7 +8,7 @@ import style from './style.less';
 import DatePicker from '@/components/DatePicker';
 import { dayjs } from '@/utils/utils';
 
-const exportExcel = function () {
+const exportExcel = function (data) {
   let option = {};
   option.fileName = 'userAdCount';
   option.datas = [
@@ -22,9 +22,11 @@ const exportExcel = function () {
   let toExcel = new ExportJsonExcel(option);
   toExcel.saveExcel();
 };
+
 const labelFormatter = function (text) {
   return text.replace('ad_success_', '');
 };
+
 const yesterday = dayjs.utc().subtract(1, 'd');
 
 function AdCount({ dispatch, didabuId, adCount, adCountLoading }) {
@@ -80,7 +82,7 @@ function AdCount({ dispatch, didabuId, adCount, adCountLoading }) {
           <>
             <Button
               disabled={!userAdCount || userAdCount.length == 0}
-              onClick={exportExcel}
+              onClick={() => exportExcel(userAdCount)}
               type="primary"
             >
               导出CSV

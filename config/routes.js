@@ -67,6 +67,12 @@ export default [
                 component: './dailyReport/retention',
               },
               {
+                path: '/dailyReport/retention/trend/:date?',
+                name: '趋势',
+                component: './dailyReport/retention/trend',
+                hideInMenu: true,
+              },
+              {
                 path: '/dailyReport/retention/detail/:date?',
                 name: '留存详情',
                 component: './dailyReport/retention/retentionDetail',
@@ -99,6 +105,12 @@ export default [
                 path: '/users/exceptionAdUsers',
                 name: '广告异常用户',
                 component: './users/exceptionAdUsers',
+                hideInMenu: true,
+              },
+              {
+                path: '/users/abGroupsStatistic',
+                name: 'AB测试数据',
+                component: './users/abGroups',
               },
               // {
               //   path: '/users/onlineUserCount',

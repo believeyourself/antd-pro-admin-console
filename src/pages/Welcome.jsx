@@ -34,7 +34,7 @@ class Home extends React.Component {
       type: 'global/selectGameType',
       gameType,
     });
-    window.location.hash = `/users/adCount/${this.state.date.valueOf()}`;
+    window.location.hash = `/users/exceptionAdUsers`;
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {

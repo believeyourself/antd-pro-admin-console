@@ -1,4 +1,4 @@
-import request from '@/utils/request';
+import request, { requestWithoutPrefix, adminRequest } from '@/utils/request';
 export async function queryRoiReport(params) {
   if (!params.app_id) {
     return {};
@@ -13,6 +13,15 @@ export async function queryDetail(params) {
     return {};
   }
   return request.get('/report/retentiondetail', {
+    params,
+  });
+}
+
+export async function queryTrend(params) {
+  if (!params.appId || !params.date) {
+    return {};
+  }
+  return adminRequest.get('/retention/trend', {
     params,
   });
 }

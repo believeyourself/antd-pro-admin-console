@@ -1,7 +1,7 @@
 import { Drawer } from 'antd';
-import { connect } from "umi";
+import { connect } from 'umi';
 import React, { useState, useEffect, useRef } from 'react';
-import { PageContainer, } from '@ant-design/pro-layout';
+import { PageContainer } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
 import ProDescriptions from '@ant-design/pro-descriptions';
 import { queryRoiReport } from './service';
@@ -71,9 +71,12 @@ const TableList = (props) => {
       title: '操作',
       valueType: 'option',
       render: (text, row, _, action) => [
-        <a href={`#/dailyReport/retention/detail/${row.current_date}`} rel="noopener noreferrer" key="view">
+        <a href={`#/dailyReport/retention/detail/${row.current_date}`} key="view">
           详情
-        </a>
+        </a>,
+        <a href={`#/dailyReport/retention/trend/${row.current_date}`} key="trend">
+          趋势
+        </a>,
       ],
     },
   ];
@@ -84,7 +87,7 @@ const TableList = (props) => {
     } else {
       return [];
     }
-  }
+  };
 
   useEffect(() => {
     actionRef.current.reload();
@@ -96,7 +99,7 @@ const TableList = (props) => {
         actionRef={actionRef}
         pagination={{
           simple: true,
-          pageSize: 10
+          pageSize: 10,
         }}
         search={{
           collapsed,
@@ -105,7 +108,9 @@ const TableList = (props) => {
         headerTitle="留存报告"
         rowKey="key"
         postData={dealResponseData}
-        request={(params, sort, filter) => queryRoiReport({ app_id: gameType, ...params, ...sort, ...filter })}
+        request={(params, sort, filter) =>
+          queryRoiReport({ app_id: gameType, ...params, ...sort, ...filter })
+        }
         columns={columns}
       />
       <Drawer
@@ -135,5 +140,5 @@ const TableList = (props) => {
 };
 
 export default connect(({ global }) => ({
-  gameType: global.gameType
+  gameType: global.gameType,
 }))(TableList);

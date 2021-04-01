@@ -22,12 +22,12 @@ const codeMessage = {
   503: '服务不可用，服务器暂时过载或维护。',
   504: '网关超时。',
 };
-const jwtInfo = getJwtInfo();
-const token = jwtInfo ? jwtInfo.jwt : '';
-const headers = {
-  'Content-Type': 'application/json',
-  Authorization: `Bearer ${token}`,
-};
+// const jwtInfo = getJwtInfo();
+// const token = jwtInfo ? jwtInfo.jwt : '';
+// const headers = {
+//   'Content-Type': 'application/json',
+//   Authorization: `Bearer ${token}`,
+// };
 
 /**
  * 异常处理程序
@@ -59,6 +59,13 @@ const errorHandler = (error) => {
 
 request.use(
   async (ctx, next) => {
+    const jwtInfo = getJwtInfo();
+    const token = jwtInfo ? jwtInfo.jwt : '';
+    const headers = {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    };
+    Object.assign(ctx.req.options.headers, headers);
     await next();
     if (ctx.res && ctx.res.code === 401) {
       notification.error({
@@ -77,27 +84,23 @@ request.use(
 
 const commonRequest = extend({
   errorHandler,
-  headers,
   prefix: 'https://lmm0p2w6k0.execute-api.us-west-2.amazonaws.com/dev',
 });
 export default commonRequest;
 
 export const adminRequest = extend({
-  headers,
   prefix:
     REACT_APP_ENV === 'production'
-      ? 'https://5wrxid3t9h.execute-api.us-west-2.amazonaws.com/Prod/'
-      : 'https://5wrxid3t9h.execute-api.us-west-2.amazonaws.com/Prod/',
+      ? 'https://5wrxid3t9h.execute-api.us-west-2.amazonaws.com/Prod'
+      : 'https://5wrxid3t9h.execute-api.us-west-2.amazonaws.com/Prod',
   errorHandler,
 });
 
 export const requestWithoutPrefix = extend({
-  headers,
   errorHandler,
 });
 
 export const didabuCoreRequest = extend({
-  headers,
   prefix:
     REACT_APP_ENV === 'production'
       ? 'https://api.didabu.com'
