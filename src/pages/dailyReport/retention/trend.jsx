@@ -1,5 +1,5 @@
 import { PageContainer } from '@ant-design/pro-layout';
-import { Chart, Line, Axis } from 'bizcharts';
+import { Chart, Line, Axis, Point, Tooltip } from 'bizcharts';
 import { Button, Card, Spin } from 'antd';
 import React from 'react';
 import { connect } from 'umi';
@@ -19,7 +19,7 @@ class RetentionTrend extends React.Component {
     const date = props.match.params.date;
     this.state = {
       loading: false,
-      date: dayjs.utc().subtract(1, 'd'),
+      date: date ? dayjs.utc(date) : dayjs.utc().subtract(1, 'd'),
       nonOrganic: [],
       organic: [],
       organicRegister: 0,
@@ -78,23 +78,58 @@ class RetentionTrend extends React.Component {
               <Spin />
             ) : (
               <Chart
+                padding={[20, 20, 80, 60]}
                 height={400}
                 scale={{
                   hour: {
-                    alias: '时间',
-                    type: 'cat',
+                    alias: 'UTC时间',
+                    type: 'linear',
+                    ticks: [
+                      0,
+                      1,
+                      2,
+                      3,
+                      4,
+                      5,
+                      6,
+                      7,
+                      8,
+                      9,
+                      10,
+                      11,
+                      12,
+                      13,
+                      14,
+                      15,
+                      16,
+                      17,
+                      18,
+                      19,
+                      20,
+                      21,
+                      22,
+                      23,
+                    ],
+                    formatter: (hour) => {
+                      return hour + '点';
+                    },
                   },
                   rate: {
                     alias: '留存率(%)',
+                    formatter: (rate) => {
+                      return rate + '%';
+                    },
                   },
                 }}
                 placeholder
                 autoFit
                 data={data}
               >
+                <Tooltip shared showCrosshairs />
                 <Axis name="hour" title={true} />
                 <Axis name="rate" title={true} />
                 <Line position="hour*rate" color="organic" />
+                <Point position="hour*rate" color="organic" />
               </Chart>
             )}
           </div>
