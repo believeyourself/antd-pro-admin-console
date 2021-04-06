@@ -17,7 +17,9 @@ const AdCount = ({ didabuId, accountId, date }) => {
   ];
 
   useEffect(() => {
-    queryData(didabuId, accountId, date);
+    if (accountId) {
+      queryData(didabuId, accountId, date);
+    }
   }, [accountId]);
 
   const queryData = async function (appId, accountId, date) {

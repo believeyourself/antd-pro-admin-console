@@ -16,7 +16,7 @@ export async function queryUserAdRecords(params) {
     return [];
   }
 
-  let { data } = await adminRequest.get('users/queryUserAdRecords', {
+  let { data } = await adminRequest.get('/users/queryUserAdRecords', {
     params,
   });
 
