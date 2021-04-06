@@ -7,7 +7,6 @@
     "analyze": "cross-env ANALYZE=1 umi build",
     "build": "cross-env REACT_APP_ENV=production umi build", 
     "build:test": "cross-env REACT_APP_ENV=test umi build",
-    "deploy": "npm run site && npm run gh-pages",
     "start": "umi dev",
     "dev": "cross-env REACT_APP_ENV=development MOCK=none umi dev",
     "fetch:blocks": "pro fetch-blocks && npm run prettier",

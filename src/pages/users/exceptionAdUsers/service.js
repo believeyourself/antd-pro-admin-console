@@ -6,7 +6,7 @@ export async function queryExceptionAdUsers(params) {
     return [];
   }
 
-  return adminRequest.get('users/queryExceptionAdUsers', {
+  return adminRequest.get('/users/queryExceptionAdUsers', {
     params,
   });
 }
