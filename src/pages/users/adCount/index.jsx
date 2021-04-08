@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { connect, useParams } from 'umi';
-import { Chart, Interval, Axis } from 'bizcharts';
+import { Chart, Interval, Axis, Tooltip } from 'bizcharts';
 import { Card, Button, Spin } from 'antd';
 import { PageContainer } from '@ant-design/pro-layout';
 import ExportJsonExcel from 'js-export-excel';
@@ -8,57 +8,39 @@ import style from './style.less';
 import DatePicker from '@/components/DatePicker';
 import { dayjs } from '@/utils/utils';
 
-const exportExcel = function (data) {
-  let option = {};
-  option.fileName = 'userAdCount';
-  option.datas = [
-    {
-      sheetData: data,
-      sheetName: 'sheet',
-      sheetFilter: ['users', 'count'],
-      sheetHeader: ['users', 'count'],
-    },
-  ];
-  let toExcel = new ExportJsonExcel(option);
-  toExcel.saveExcel();
-};
-
-const labelFormatter = function (text) {
-  return text.replace('ad_success_', '');
-};
-
-const yesterday = dayjs.utc().subtract(1, 'd');
-
-function AdCount({ dispatch, didabuId, adCount, adCountLoading }) {
+function AdCount({ dispatch, didabuId, adCount, adCountLoading, gameType }) {
   const params = useParams();
   const initData = params.date ? dayjs.utc(Number(params.date)) : yesterday;
   const [date, setDate] = useState(initData);
   const dateFormat = date.format('YYYY-MM-DD');
-  let { userAdCount, gameAdCount } = adCount[`${didabuId}_${dateFormat}`] || {};
+  let { userAdCount, gameAdCount, activeCount = 0 } = adCount[`${didabuId}_${dateFormat}`] || {};
   useEffect(() => {
     if (didabuId && !userAdCount) {
       dispatch({
         type: 'users/queryAdCount',
         appId: didabuId,
         date: dateFormat,
+        gameType,
       });
     }
   }, [didabuId, date]);
 
-  const dangerUserCount = useMemo(() => {
-    let count = 0;
+  const userCount = useMemo(() => {
+    let dangerCount = 0;
+    let adUserCount = 0;
     let adCount = 0;
     if (Array.isArray(userAdCount)) {
       for (let i = 0; i < userAdCount.length; ++i) {
-        adCount += userAdCount[i].count * userAdCount[i].users;
+        adCount += userAdCount[i].users * userAdCount[i].count;
         userAdCount[i].count = String(userAdCount[i].count);
         if (userAdCount[i].count > 60) {
-          count += userAdCount[i].users;
+          dangerCount += userAdCount[i].users;
         }
+        adUserCount += userAdCount[i].users;
       }
     }
 
-    return count;
+    return { dangerCount, adUserCount };
   }, [userAdCount]);
 
   return (
@@ -74,7 +56,9 @@ function AdCount({ dispatch, didabuId, adCount, adCountLoading }) {
         />
       </div>
       <div className={style.content}>
-        <span>广告次数超60次人数：{dangerUserCount}</span>
+        <span>日活：{activeCount}</span>
+        <span>广告次数超60次人数：{userCount.dangerCount}</span>
+        <span>未看广告人数：{activeCount - userCount.adUserCount}</span>
       </div>
       <Card
         title="用户广告次数"
@@ -103,12 +87,16 @@ function AdCount({ dispatch, didabuId, adCount, adCountLoading }) {
                 },
                 users: {
                   alias: '用户数',
+                  formatter(text) {
+                    return `${text} (${((text / activeCount) * 100).toFixed(2)}%)`;
+                  },
                 },
               }}
               placeholder
               autoFit
               data={userAdCount}
             >
+              <Tooltip shared showCrosshairs />
               <Axis name="count" title={true} />
               <Axis name="users" title={true} />
               <Interval position="count*users" />
@@ -137,6 +125,7 @@ function AdCount({ dispatch, didabuId, adCount, adCountLoading }) {
               autoFit
               data={gameAdCount}
             >
+              <Tooltip shared showCrosshairs />
               <Axis name="feature" title={true} label={{ formatter: labelFormatter }} />
               <Axis name="ad_count" title={true} />
               <Interval position="feature*ad_count" />
@@ -148,7 +137,29 @@ function AdCount({ dispatch, didabuId, adCount, adCountLoading }) {
   );
 }
 
+const exportExcel = function (data) {
+  let option = {};
+  option.fileName = 'userAdCount';
+  option.datas = [
+    {
+      sheetData: data,
+      sheetName: 'sheet',
+      sheetFilter: ['users', 'count'],
+      sheetHeader: ['users', 'count'],
+    },
+  ];
+  let toExcel = new ExportJsonExcel(option);
+  toExcel.saveExcel();
+};
+
+const labelFormatter = function (text) {
+  return text.replace('ad_success_', '');
+};
+
+const yesterday = dayjs.utc().subtract(1, 'd');
+
 export default connect(({ global, users, loading }) => ({
+  gameType: global.gameType,
   didabuId: global.didabuId,
   adCount: users.adCount,
   adCountLoading: loading.effects['users/queryAdCount'],
