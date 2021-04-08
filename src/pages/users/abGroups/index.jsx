@@ -4,7 +4,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import DatePicker from '@/components/DatePicker';
 import React from 'react';
 import { connect } from 'umi';
-import { queryAbGroupList } from './service';
+import { queryAbGroupList, queryAbGroupStatistic } from './service';
 
 const Option = Select.Option;
 @connect(({ global }) => ({
@@ -19,9 +19,11 @@ class ABGroup extends React.Component {
       abGroup: null,
       needReload: false,
       data: [],
+      date: null,
     };
 
     this.queryABGroups = this.queryABGroups.bind(this);
+    this.queryStatisticData = this.queryStatisticData.bind(this);
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -36,7 +38,14 @@ class ABGroup extends React.Component {
     }
   }
 
-  queryStatisticData() {}
+  queryStatisticData() {
+    if (this.props.didabuId && this.state.abGroup && this.state.date) {
+      this.setState({ loading: true });
+      queryAbGroupStatistic(this.props.didabuId).then(({ data }) => {
+        this.setState({ abGroups: data, loading: false, abGroup: null });
+      });
+    }
+  }
 
   queryABGroups() {
     if (this.props.didabuId) {
@@ -72,11 +81,15 @@ class ABGroup extends React.Component {
           </Col>
           <Col xs={24} sm={8} md={8} span={8}>
             注册日期：
-            <DatePicker style={{ width: '80%' }} />
+            <DatePicker
+              value={this.state.date}
+              onChange={(date) => this.setState({ date })}
+              style={{ width: '80%' }}
+            />
           </Col>
           <Col xs={24} sm={8} md={8} span={8} style={{ textAlign: 'right' }}>
             <Button
-              onClick={this.search}
+              onClick={this.queryStatisticData}
               loading={this.state.loading}
               icon={<SearchOutlined />}
               type="primary"
