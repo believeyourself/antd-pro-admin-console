@@ -6,7 +6,7 @@ import { PageContainer } from '@ant-design/pro-layout';
 import ExportJsonExcel from 'js-export-excel';
 import style from './style.less';
 import DatePicker from '@/components/DatePicker';
-import { dayjs } from '@/utils/utils';
+import { dayjs, getPercent } from '@/utils/utils';
 
 function AdCount({ dispatch, didabuId, adCount, adCountLoading, gameType }) {
   const params = useParams();
@@ -43,22 +43,28 @@ function AdCount({ dispatch, didabuId, adCount, adCountLoading, gameType }) {
     return { dangerCount, adUserCount };
   }, [userAdCount]);
 
+  const noAdUserCount = activeCount - userCount.adUserCount;
   return (
     <PageContainer className={style.container}>
       <div className={style.filter_container}>
         日期：
         <DatePicker
-          disabledDate={(currentDate) => {
-            return currentDate.utc() > yesterday;
-          }}
+          // disabledDate={(currentDate) => {
+          //   return currentDate.utc() > yesterday;
+          // }}
           value={date}
           onChange={setDate}
         />
       </div>
       <div className={style.content}>
         <span>日活：{activeCount}</span>
-        <span>广告次数超60次人数：{userCount.dangerCount}</span>
-        <span>未看广告人数：{activeCount - userCount.adUserCount}</span>
+        <span>
+          广告次数超60次人数：{userCount.dangerCount} (
+          {getPercent(userCount.dangerCount, activeCount)}%)
+        </span>
+        <span>
+          未看广告人数：{noAdUserCount} ({getPercent(noAdUserCount, activeCount)}%)
+        </span>
       </div>
       <Card
         title="用户广告次数"

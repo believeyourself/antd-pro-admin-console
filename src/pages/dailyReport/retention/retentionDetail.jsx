@@ -32,6 +32,7 @@ const TableList = (props) => {
     {
       title: '新增',
       dataIndex: 'new_user_count',
+      sorter: (a, b) => a.new_user_count - b.new_user_count,
     },
     {
       title: '次留',

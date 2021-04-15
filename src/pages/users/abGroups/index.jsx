@@ -5,6 +5,7 @@ import DatePicker from '@/components/DatePicker';
 import React from 'react';
 import { connect } from 'umi';
 import { queryAbGroupList, queryAbGroupStatistic } from './service';
+import { dayjs, getPercent } from '@/utils/utils';
 
 const Option = Select.Option;
 @connect(({ global }) => ({
@@ -15,34 +16,36 @@ class ABGroup extends React.Component {
     super(props);
     this.state = {
       loading: false,
-      abGroups: [],
+      abGroups: [{ name: 'ac_dollar1' }],
       abGroup: null,
       needReload: false,
       data: [],
-      date: null,
+      date: dayjs.utc().subtract(1, 'd'),
     };
 
     this.queryABGroups = this.queryABGroups.bind(this);
     this.queryStatisticData = this.queryStatisticData.bind(this);
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if (this.props.didabuId && this.props.didabuId !== prevProps.didabuId) {
-      this.queryABGroups();
-    }
-  }
+  // componentDidUpdate(prevProps, prevState, snapshot) {
+  //   if (this.props.didabuId && this.props.didabuId !== prevProps.didabuId) {
+  //     this.queryABGroups();
+  //   }
+  // }
 
-  componentDidMount() {
-    if (this.props.didabuId) {
-      this.queryABGroups();
-    }
-  }
+  // componentDidMount() {
+  //   if (this.props.didabuId) {
+  //     this.queryABGroups();
+  //   }
+  // }
 
   queryStatisticData() {
-    if (this.props.didabuId && this.state.abGroup && this.state.date) {
+    const { didabuId } = this.props;
+    const { abGroup, date } = this.state;
+    if (didabuId && abGroup && date) {
       this.setState({ loading: true });
-      queryAbGroupStatistic(this.props.didabuId).then(({ data }) => {
-        this.setState({ abGroups: data, loading: false, abGroup: null });
+      queryAbGroupStatistic(didabuId, abGroup, date?.valueOf()).then(({ data }) => {
+        this.setState({ loading: false, data });
       });
     }
   }
@@ -98,7 +101,7 @@ class ABGroup extends React.Component {
             </Button>
           </Col>
         </Row>
-        <Table bordered columns={columns}></Table>
+        <Table bordered columns={columns} dataSource={this.state.data}></Table>
       </PageContainer>
     );
   }
@@ -106,87 +109,57 @@ class ABGroup extends React.Component {
 
 const columns = [
   {
+    key: 'key',
     title: 'AB分组',
-    dataIndex: 'value',
+    dataIndex: 'ab_group',
+    render(text, data, index) {
+      return text.split('#')[1];
+    },
   },
   {
     title: '用户来源',
     dataIndex: 'organic',
-    render(text, index, data) {
+    render(text, data, index) {
       return ['非自然', '自然'][text];
+    },
+    filterMultiple: false,
+    filters: [
+      { text: '自然', value: 1 },
+      { text: '非自然', value: 0 },
+    ],
+    onFilter(value, record) {
+      return record.organic === value;
     },
   },
   {
-    title: '注册日期',
-    dataIndex: 'value',
+    title: '留存日期',
+    dataIndex: 'retention_date',
+    render(text) {
+      return dayjs.utc(text).format('YYYY-MM-DD');
+    },
   },
   {
-    title: '次留',
-    children: [
-      {
-        title: '留存',
-        dataIndex: 'retention',
-      },
-      {
-        title: '广告次数',
-        dataIndex: 'ad_count',
-      },
-      {
-        title: '收益',
-        dataIndex: 'revenue',
-      },
-    ],
+    title: '注册人数',
+    dataIndex: 'register',
   },
   {
-    title: '三留',
-    children: [
-      {
-        title: '留存',
-        dataIndex: 'retention',
-      },
-      {
-        title: '广告次数',
-        dataIndex: 'ad_count',
-      },
-      {
-        title: '收益',
-        dataIndex: 'revenue',
-      },
-    ],
+    title: '留存人数',
+    dataIndex: 'retention',
   },
   {
-    title: '四留',
-    children: [
-      {
-        title: '留存',
-        dataIndex: 'retention',
-      },
-      {
-        title: '广告次数',
-        dataIndex: 'ad_count',
-      },
-      {
-        title: '收益',
-        dataIndex: 'revenue',
-      },
-    ],
+    title: '留存(%)',
+    dataIndex: 'retention',
+    render(text, row, index) {
+      return getPercent(text, row.register);
+    },
   },
   {
-    title: '七留',
-    children: [
-      {
-        title: '留存',
-        dataIndex: 'retention',
-      },
-      {
-        title: '广告次数',
-        dataIndex: 'ad_count',
-      },
-      {
-        title: '收益',
-        dataIndex: 'revenue',
-      },
-    ],
+    title: '广告次数',
+    dataIndex: 'ad_count',
+  },
+  {
+    title: '收益',
+    dataIndex: 'revenue',
   },
 ];
 
