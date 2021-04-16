@@ -67,12 +67,6 @@ export default [
                 component: './dailyReport/retention',
               },
               {
-                path: '/dailyReport/retention/trend/:date?',
-                name: '趋势',
-                component: './dailyReport/retention/trend',
-                hideInMenu: true,
-              },
-              {
                 path: '/dailyReport/retention/detail/:date?',
                 name: '留存详情',
                 component: './dailyReport/retention/retentionDetail',
@@ -143,13 +137,13 @@ export default [
               },
             ],
           },
-          {
-            path: '/inviteActivity',
-            name: '拉新活动',
-            icon: 'Plus',
-            // authority: ['admin', 'operator'],
-            component: './activity/invite/invite',
-          },
+          // {
+          //   path: '/inviteActivity',
+          //   name: '拉新活动',
+          //   icon: 'Plus',
+          //   // authority: ['admin', 'operator'],
+          //   component: './activity/invite/invite',
+          // },
           {
             component: './404',
           },

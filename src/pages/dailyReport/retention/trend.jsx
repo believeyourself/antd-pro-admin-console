@@ -1,31 +1,23 @@
-import { PageContainer } from '@ant-design/pro-layout';
 import { Chart, Line, Axis, Point, Tooltip } from 'bizcharts';
 import { Button, Card, Spin } from 'antd';
 import React from 'react';
-import { connect } from 'umi';
 import { queryTrend } from './service';
 import { dayjs } from '@/utils/utils';
 import ListSearch from '@/components/ListSearch';
 import DatePicker from '@/components/DatePicker';
 import styles from './index.less';
 
-@connect(({ global }) => ({
-  didabuId: global.didabuId,
-  gameType: global.gameType,
-}))
 class RetentionTrend extends React.Component {
   constructor(props) {
     super(props);
-    const date = props.match.params.date;
     this.state = {
       loading: false,
-      date: date ? dayjs.utc(date) : dayjs.utc().subtract(1, 'd'),
+      date: dayjs.utc().subtract(1, 'd'),
       nonOrganic: [],
       organic: [],
       organicRegister: 0,
       nonOrganicRegister: 0,
     };
-
     this.loadData = this.loadData.bind(this);
   }
 
@@ -58,7 +50,7 @@ class RetentionTrend extends React.Component {
     let nonOrganicRate = getRetentionRate(nonOrganic, nonOrganicRegister);
     const data = organicRate.concat(nonOrganicRate);
     return (
-      <PageContainer>
+      <React.Fragment>
         <ListSearch
           filters={[
             <div key="date">
@@ -134,7 +126,7 @@ class RetentionTrend extends React.Component {
             )}
           </div>
         </Card>
-      </PageContainer>
+      </React.Fragment>
     );
   }
 }
