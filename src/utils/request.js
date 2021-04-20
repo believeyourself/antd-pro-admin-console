@@ -91,8 +91,8 @@ export default commonRequest;
 export const adminRequest = extend({
   prefix:
     REACT_APP_ENV === 'production'
-      ? 'https://5wrxid3t9h.execute-api.us-west-2.amazonaws.com/Prod'
-      : 'https://5wrxid3t9h.execute-api.us-west-2.amazonaws.com/Prod',
+      ? ' https://g5eskj98ul.execute-api.us-west-2.amazonaws.com/Prod'
+      : ' https://g5eskj98ul.execute-api.us-west-2.amazonaws.com/Prod',
   errorHandler,
 });
 

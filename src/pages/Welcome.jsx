@@ -1,17 +1,17 @@
 import React from 'react';
-import { connect, Link } from 'umi';
+import { connect } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Card, Skeleton, Row, Col, Button } from 'antd';
 import DatePicker from '@/components/DatePicker';
 import { dayjs } from '@/utils/utils';
 import style from './welcome.less';
-import { stubFalse } from 'lodash';
 
 class Home extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       date: dayjs.utc().subtract(1, 'd'),
+      isReady: false,
     };
     this.handleDate = this.handleDate.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
@@ -39,6 +39,12 @@ class Home extends React.Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.games.length != this.props.games.length && this.props.games.length > 0) {
+      this.handleSearch();
+    }
+  }
+
+  componentDidMount() {
+    if (this.props.games.length > 0) {
       this.handleSearch();
     }
   }

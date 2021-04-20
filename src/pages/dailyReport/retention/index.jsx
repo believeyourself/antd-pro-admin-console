@@ -26,6 +26,7 @@ const Retention = ({ gameType, didabuId }) => {
         setActiveTab(key);
       }}
     >
+      {activeTab}
       {activeTab === 'list' ? RetentionList : RetentionTrend}
     </PageContainer>
   );
