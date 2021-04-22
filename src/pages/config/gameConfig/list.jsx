@@ -1,7 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { connect, Link } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Table } from 'antd';
+import { didabuCoreRequest } from '@/utils/request';
+import { download } from '@/utils/utils';
+
+async function downloadConfig(appId, name) {
+  let { data } = await didabuCoreRequest.get('/application/appConfig', {
+    params: { appId },
+  });
+
+  download(name, JSON.stringify(data));
+}
 
 const GameConfig = (props) => {
   const { apps = [], dispatch, loading } = props;
@@ -24,6 +34,13 @@ const GameConfig = (props) => {
         <Link key="edit" to={`/config/gameConfig/edit/${rowData.id}`}>
           编辑
         </Link>,
+        <a
+          style={{ marginLeft: '10px' }}
+          onClick={() => downloadConfig(rowData.appId, rowData.name)}
+          key="download"
+        >
+          下载配置
+        </a>,
       ],
     },
   ];

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect, useParams } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Button, Input, Row, Col, Divider, message, Modal } from 'antd';
@@ -12,12 +12,14 @@ const GameConfig = ({
   didabuEventsLoading,
   assetsEventsLoading,
   controlDataLoading,
+  abControlDataLoading,
+  abGroupEventsLoading,
   apps,
 }) => {
-  const fileRef = useRef();
   const { id } = useParams();
   const [eventCounters, setEventsCounters] = useState();
   const [ABGroup, setABGroup] = useState();
+  const [ABGroupEvents, setABGroupEvents] = useState();
   const [events, setEvents] = useState();
   const [assetEvents, setAssetEvents] = useState();
   const [assetEventNames, setAssetEventNames] = useState();
@@ -25,6 +27,8 @@ const GameConfig = ({
   const [appName, setAppName] = useState();
   const [controlDataKey, setControlDataKey] = useState();
   const [previewJson, setPreviewJson] = useState(false);
+  const [abGroupControlDatas, setAbGroupControlDatas] = useState([]);
+  const [abGroupControlDataKey, setAbGroupControlDataKey] = useState({});
 
   useEffect(() => {
     if (!apps) {
@@ -36,15 +40,76 @@ const GameConfig = ({
 
       if (app) {
         setEventsCounters(JSON.stringify(app.eventCounters));
-        setABGroup(JSON.stringify(app.abGroupEvents));
+        setABGroup(JSON.stringify(app.abGroups));
+        setABGroupEvents(JSON.stringify(app.abGroupEvents));
         setEvents(JSON.stringify(app.didabuEvents));
         setAssetEvents(JSON.stringify(app.assetChangedEvents));
         setAssetEventNames(app.assetEventParameterName);
         setControlData(app.controlData);
         setAppName(app.name);
+        if (Array.isArray(app.abGroupControlDatas)) {
+          setAbGroupControlDatas(app.abGroupControlDatas);
+        }
       }
     }
   }, [id, apps]);
+
+  let abGroupNode = [];
+  abGroupControlDatas.forEach((item) => {
+    let name = `${item.abGroupName}#${item.abGroupValue}`;
+    abGroupNode.push(
+      <React.Fragment key={name}>
+        <Divider />
+        <Row className={style.item}>
+          <Col className={style.label} {...labelCol}>
+            {name}控制数值:
+          </Col>
+          <Col {...inputCol}>
+            <Input value={item.controlData} disabled />
+          </Col>
+          <Col {...buttonCol}>
+            <Button onClick={() => setPreviewJson(item.controlData)} type="primary">
+              浏览
+            </Button>
+          </Col>
+        </Row>
+        ,
+        <Row className={style.item}>
+          <Col {...noBabelCol}>
+            <Row>
+              <Col span="4">
+                <Input
+                  value={abGroupControlDataKey[name]}
+                  onChange={(e) => {
+                    abGroupControlDataKey[name] = e.target.value;
+                    setAbGroupControlDataKey(abGroupControlDataKey);
+                  }}
+                />
+              </Col>
+              <Col span="12" offset="1">
+                <input
+                  className={style.input_file}
+                  type="file"
+                  onChange={(evt) => {
+                    readFile(evt, item.abGroupName, item.abGroupValue);
+                  }}
+                />
+              </Col>
+            </Row>
+          </Col>
+          <Col {...buttonCol}>
+            <Button
+              loading={abControlDataLoading}
+              onClick={() => saveABControlData(item.abGroupName, item.abGroupValue)}
+              type="primary"
+            >
+              保存
+            </Button>
+          </Col>
+        </Row>
+      </React.Fragment>,
+    );
+  });
 
   const saveEventsCount = () => {
     dispatch({
@@ -66,12 +131,21 @@ const GameConfig = ({
     });
   };
 
+  const saveABGroupEvents = () => {
+    dispatch({
+      type: 'config/saveABGroupEvents',
+      payload: {
+        id: id,
+        abGroupEvents: ABGroupEvents,
+      },
+    });
+  };
   const saveABGroup = () => {
     dispatch({
       type: 'config/saveABGroup',
       payload: {
         id: id,
-        abGroupEvents: ABGroup,
+        abGroups: ABGroup,
       },
     });
   };
@@ -96,19 +170,58 @@ const GameConfig = ({
       },
     });
   };
+  const saveABControlData = (abGroupName, abGroupValue) => {
+    let abGroup = abGroupControlDatas.find((item) => {
+      return item.abGroupName === abGroupName && item.abGroupValue === abGroupValue;
+    });
+    dispatch({
+      type: 'config/saveABControlData',
+      payload: {
+        id,
+        abGroupName,
+        abGroupValue,
+        controlData: abGroup.controlData,
+      },
+    });
+  };
 
-  const readFile = () => {
-    let file = fileRef.current.files[0];
+  const readFile = (evt, abGroupName, abGroupValue) => {
+    let file = evt.target.files[0];
+    let isUpdateABControlData = !!abGroupName;
     if (file) {
-      let updateControlData = controlData ? JSON.parse(controlData) : {};
+      let curControlData = null;
+      let key = null;
+      if (isUpdateABControlData) {
+        key = abGroupControlDataKey[`${abGroupName}#${abGroupValue}`];
+        let abGroup = abGroupControlDatas.find((item) => {
+          return item.abGroupName === abGroupName && item.abGroupValue === abGroupValue;
+        });
+        curControlData = abGroup.controlData;
+      } else {
+        curControlData = controlData;
+        key = controlDataKey;
+      }
+
+      curControlData = curControlData.replace(/\n/g, '\\n').replace(/\r/g, '\\r');
+      let updateControlData = curControlData ? JSON.parse(curControlData) : {};
       let fileReader = new FileReader();
-      fileReader.onloadend = function (evt) {
-        if (controlDataKey) {
-          updateControlData[controlDataKey] = evt.target.result;
-          setControlData(JSON.stringify(updateControlData));
+      fileReader.onloadend = function (event) {
+        if (key) {
+          updateControlData[key] = event.target.result;
+          if (isUpdateABControlData) {
+            let newAbControlData = abGroupControlDatas.map((item) => {
+              if (item.abGroupName === abGroupName && item.abGroupValue === abGroupValue) {
+                item.controlData = JSON.stringify(updateControlData);
+              }
+              return item;
+            });
+            setAbGroupControlDatas(newAbControlData);
+          } else {
+            setControlData(JSON.stringify(updateControlData));
+          }
         } else {
           message.error('请先输入文件KEY值');
-          fileRef.current.value = null;
+          evt.target.value = null;
         }
       };
       fileReader.readAsText(file);
@@ -145,13 +258,31 @@ const GameConfig = ({
         <Divider />
         <Row className={style.item}>
           <Col className={style.label} {...labelCol}>
-            AB GROUP设置：
+            AB分组配置：
           </Col>
           <Col {...inputCol}>
             <Input value={ABGroup} allowClear onChange={(e) => setABGroup(e.target.value)} />
           </Col>
           <Col {...buttonCol}>
             <Button loading={abGroupLoading} onClick={saveABGroup} type="primary">
+              保存
+            </Button>
+          </Col>
+        </Row>
+        <Divider />
+        <Row className={style.item}>
+          <Col className={style.label} {...labelCol}>
+            AB事件配置：
+          </Col>
+          <Col {...inputCol}>
+            <Input
+              value={ABGroupEvents}
+              allowClear
+              onChange={(e) => setABGroupEvents(e.target.value)}
+            />
+          </Col>
+          <Col {...buttonCol}>
+            <Button loading={abGroupEventsLoading} onClick={saveABGroupEvents} type="primary">
               保存
             </Button>
           </Col>
@@ -209,7 +340,7 @@ const GameConfig = ({
             <Input value={controlData} disabled />
           </Col>
           <Col {...buttonCol}>
-            <Button onClick={() => setPreviewJson(true)} type="primary">
+            <Button onClick={() => setPreviewJson(controlData)} type="primary">
               浏览
             </Button>
           </Col>
@@ -221,7 +352,7 @@ const GameConfig = ({
                 <Input value={controlDataKey} onChange={(e) => setControlDataKey(e.target.value)} />
               </Col>
               <Col span="12" offset="1">
-                <input className={style.input_file} ref={fileRef} type="file" onChange={readFile} />
+                <input className={style.input_file} type="file" onChange={readFile} />
               </Col>
             </Row>
           </Col>
@@ -231,12 +362,13 @@ const GameConfig = ({
             </Button>
           </Col>
         </Row>
+        {abGroupNode}
         <Modal
           title="control data"
           cancelText="关闭"
           centered
           onCancel={() => setPreviewJson(false)}
-          visible={previewJson}
+          visible={!!previewJson}
           footer={null}
           width="80%"
         >
@@ -244,7 +376,11 @@ const GameConfig = ({
             <ReactJson
               displayDataTypes={false}
               name={false}
-              src={controlData ? JSON.parse(controlData) : {}}
+              src={
+                previewJson
+                  ? JSON.parse(previewJson.replace(/\n/g, '\\n').replace(/\r/g, '\\r'))
+                  : {}
+              }
             ></ReactJson>
           </div>
         </Modal>
@@ -256,10 +392,12 @@ const GameConfig = ({
 export default connect(({ loading, config }) => ({
   apps: config.apps,
   eventCountersLoading: loading.effects['config/saveEventsCount'],
-  abGroupLoading: loading.effects['config/saveABGroupSetting'],
+  abGroupLoading: loading.effects['config/saveABGroup'],
+  abGroupEventsLoading: loading.effects['config/saveABGroupEvents'],
   didabuEventsLoading: loading.effects['config/saveDidabuEvents'],
   assetsEventsLoading: loading.effects['config/saveAssetsEvents'],
   controlDataLoading: loading.effects['config/saveControlData'],
+  abControlDataLoading: loading.effects['config/saveABControlData'],
 }))(GameConfig);
 
 const noBabelCol = {

@@ -10,5 +10,6 @@ export default {
     { name: 'APP版本', value: 'app_version' },
     { name: '广告', value: 'af_ad' },
     { name: '运营商', value: 'carrier' },
+    { name: 'AB分组', value: 'ab_group' },
   ],
 };

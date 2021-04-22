@@ -120,8 +120,8 @@ class RetentionTrend extends React.Component {
                 <Tooltip shared showCrosshairs />
                 <Axis name="hour" title={true} />
                 <Axis name="rate" title={true} />
-                <Line position="hour*rate" color="organic" />
-                <Point position="hour*rate" color="organic" />
+                <Line animate={false} position="hour*rate" color="organic" />
+                <Point animate={false} position="hour*rate" color="organic" />
               </Chart>
             )}
           </div>

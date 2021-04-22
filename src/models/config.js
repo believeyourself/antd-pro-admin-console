@@ -1,10 +1,12 @@
 import {
   saveEventsCount,
   saveABGroup,
+  saveABGroupEvents,
   saveDidabuEvents,
   saveAssetEvents,
   queryAppList,
   saveControlData,
+  saveABControlData,
 } from '@/services/config';
 import { message } from 'antd';
 
@@ -25,8 +27,15 @@ const Modal = {
       commonResult(result);
     },
 
+    *saveABGroupEvents({ payload }, { call, put }) {
+      let result = yield call(saveABGroupEvents, payload);
+      commonResult(result);
+    },
     *saveABGroup({ payload }, { call, put }) {
       let result = yield call(saveABGroup, payload);
+      yield put({
+        type: 'queryAppList',
+      });
       commonResult(result);
     },
 
@@ -50,6 +59,10 @@ const Modal = {
 
     *saveControlData({ payload }, { call, put }) {
       let result = yield call(saveControlData, payload);
+      commonResult(result);
+    },
+    *saveABControlData({ payload }, { call, put }) {
+      let result = yield call(saveABControlData, payload);
       commonResult(result);
     },
   },

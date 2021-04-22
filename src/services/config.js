@@ -20,14 +20,25 @@ export async function saveEventsCount(params) {
   });
 }
 
-export async function saveABGroup(params) {
+export async function saveABGroupEvents(params) {
   if (!params.abGroupEvents) {
     params.abGroupEvents = [];
   } else {
     params.abGroupEvents = JSON.parse(params.abGroupEvents);
   }
 
-  return didabuCoreRequest.put('/application/abGroup', {
+  return didabuCoreRequest.put('/application/abGroupEvents', {
+    body: JSON.stringify(params),
+  });
+}
+export async function saveABGroup(params) {
+  if (!params.abGroups) {
+    params.abGroups = [];
+  } else {
+    params.abGroups = JSON.parse(params.abGroups);
+  }
+
+  return didabuCoreRequest.put('/application/abGroups', {
     body: JSON.stringify(params),
   });
 }
@@ -63,6 +74,16 @@ export async function saveControlData(params) {
   }
 
   return didabuCoreRequest.put('/application/controlData', {
+    body: JSON.stringify(params),
+  });
+}
+
+export async function saveABControlData(params) {
+  if (!params.controlData) {
+    params.controlData = {};
+  }
+
+  return didabuCoreRequest.put('/application/abGroupControlData', {
     body: JSON.stringify(params),
   });
 }
