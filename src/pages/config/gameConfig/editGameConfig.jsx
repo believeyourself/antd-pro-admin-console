@@ -90,6 +90,9 @@ const GameConfig = ({
                 <input
                   className={style.input_file}
                   type="file"
+                  onClick={(event) => {
+                    event.target.value = null;
+                  }}
                   onChange={(evt) => {
                     readFile(evt, item.abGroupName, item.abGroupValue);
                   }}
@@ -187,6 +190,7 @@ const GameConfig = ({
 
   const readFile = (evt, abGroupName, abGroupValue) => {
     let file = evt.target.files[0];
+    let fileNode = evt.target;
     let isUpdateABControlData = !!abGroupName;
     if (file) {
       let curControlData = null;
@@ -221,7 +225,7 @@ const GameConfig = ({
           }
         } else {
           message.error('请先输入文件KEY值');
-          evt.target.value = null;
+          fileNode.value = null;
         }
       };
       fileReader.readAsText(file);
@@ -352,7 +356,14 @@ const GameConfig = ({
                 <Input value={controlDataKey} onChange={(e) => setControlDataKey(e.target.value)} />
               </Col>
               <Col span="12" offset="1">
-                <input className={style.input_file} type="file" onChange={readFile} />
+                <input
+                  className={style.input_file}
+                  type="file"
+                  onChange={readFile}
+                  onClick={(event) => {
+                    event.target.value = null;
+                  }}
+                />
               </Col>
             </Row>
           </Col>

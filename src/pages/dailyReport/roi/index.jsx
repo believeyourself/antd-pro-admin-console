@@ -72,19 +72,19 @@ const TableList = (props) => {
     //   dataIndex: 'first_24_hour_revenue',
     //   search: false,
     // },
-    {
-      title: '操作',
-      valueType: 'option',
-      render: (text, rowData) => [
-        <a
-          href={`#/dailyReport/roi/detail/${rowData.current_date}`}
-          rel="noopener noreferrer"
-          key="view"
-        >
-          详情
-        </a>,
-      ],
-    },
+    // {
+    //   title: '操作',
+    //   valueType: 'option',
+    //   render: (text, rowData) => [
+    //     <a
+    //       href={`#/dailyReport/roi/detail/${rowData.current_date}`}
+    //       rel="noopener noreferrer"
+    //       key="view"
+    //     >
+    //       详情
+    //     </a>,
+    //   ],
+    // },
   ];
 
   useEffect(() => {

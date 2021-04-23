@@ -16,7 +16,7 @@ class ABGroup extends React.Component {
     super(props);
     this.state = {
       loading: false,
-      abGroups: [{ name: 'ac_dollar1' }],
+      abGroups: [{ name: 'AdInterval' }],
       abGroup: null,
       needReload: false,
       data: [],
