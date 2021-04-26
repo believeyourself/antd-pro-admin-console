@@ -101,11 +101,11 @@ export default [
                 component: './users/exceptionAdUsers',
                 hideInMenu: true,
               },
-              // {
-              //   path: '/users/abGroupsStatistic',
-              //   name: 'AB测试数据',
-              //   component: './users/abGroups',
-              // },
+              {
+                path: '/users/abGroupsStatistic',
+                name: 'AB测试数据',
+                component: './users/abGroups',
+              },
               // {
               //   path: '/users/onlineUserCount',
               //   name: '在线统计',

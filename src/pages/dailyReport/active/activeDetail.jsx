@@ -50,9 +50,15 @@ const TableList = (props) => {
     //   search: false,
     // },
     {
-      title: '新增广告数',
+      title: '新增人均广告数',
       dataIndex: 'new_ad_count',
       search: false,
+      render(text, rowData, index) {
+        if (!rowData.new_ad_count || !rowData.new_count) {
+          return '--';
+        }
+        return (rowData.new_ad_count / rowData.new_count).toFixed(2);
+      },
     },
     {
       title: '留存',
@@ -68,6 +74,12 @@ const TableList = (props) => {
       title: '留存广告数',
       dataIndex: 'retention_ad_count',
       search: false,
+      render(text, rowData, index) {
+        if (!rowData.retention_ad_count || !rowData.retention_count) {
+          return '--';
+        }
+        return (rowData.retention_ad_count / rowData.retention_count).toFixed(2);
+      },
     },
   ];
   for (let i = conditions.length - 1; i >= 0; --i) {

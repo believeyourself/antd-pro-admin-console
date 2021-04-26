@@ -6,8 +6,8 @@ export async function queryAbGroupList(appId) {
   });
 }
 
-export async function queryAbGroupStatistic(appId, abGroup, date) {
+export async function queryAbGroupStatistic(appId, date) {
   return adminRequest.get('/game/abGroupStatistic', {
-    params: { appId, abGroup, date },
+    params: { appId, date },
   });
 }

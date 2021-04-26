@@ -206,7 +206,7 @@ const GameConfig = ({
         key = controlDataKey;
       }
 
-      curControlData = curControlData.replace(/\n/g, '\\n').replace(/\r/g, '\\r');
+      // curControlData = curControlData.replace(/\n/g, '\\n').replace(/\r/g, '\\r');
       let updateControlData = curControlData ? JSON.parse(curControlData) : {};
       let fileReader = new FileReader();
       fileReader.onloadend = function (event) {
