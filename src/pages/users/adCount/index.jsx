@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect, useParams } from 'umi';
 import { Chart, Interval, Axis, Tooltip } from 'bizcharts';
 import { Card, Button, Spin } from 'antd';
@@ -25,41 +25,32 @@ function AdCount({ dispatch, didabuId, adCount, adCountLoading, gameType }) {
     }
   }, [didabuId, date]);
 
-  const userCount = useMemo(() => {
+  let userCount = {};
+  if (Array.isArray(userAdCount)) {
     let dangerCount = 0;
     let adUserCount = 0;
-    let adCount = 0;
-    if (Array.isArray(userAdCount)) {
-      for (let i = 0; i < userAdCount.length; ++i) {
-        adCount += userAdCount[i].users * userAdCount[i].count;
-        userAdCount[i].count = String(userAdCount[i].count);
-        if (userAdCount[i].count > 60) {
-          dangerCount += userAdCount[i].users;
-        }
-        adUserCount += userAdCount[i].users;
+    for (let i = 0; i < userAdCount.length; ++i) {
+      adCount += userAdCount[i].users * userAdCount[i].count;
+      userAdCount[i].count = String(userAdCount[i].count);
+      if (userAdCount[i].count > 120) {
+        dangerCount += userAdCount[i].users;
       }
+      adUserCount += userAdCount[i].users;
     }
-
-    return { dangerCount, adUserCount };
-  }, [userAdCount]);
+    userCount = { dangerCount, adUserCount };
+  }
 
   const noAdUserCount = activeCount - userCount.adUserCount;
   return (
     <PageContainer className={style.container}>
       <div className={style.filter_container}>
         日期：
-        <DatePicker
-          // disabledDate={(currentDate) => {
-          //   return currentDate.utc() > yesterday;
-          // }}
-          value={date}
-          onChange={setDate}
-        />
+        <DatePicker value={date} onChange={setDate} />
       </div>
       <div className={style.content}>
         <span>日活：{activeCount}</span>
         <span>
-          广告次数超60次人数：{userCount.dangerCount} (
+          广告次数超120次人数：{userCount.dangerCount} (
           {getPercent(userCount.dangerCount, activeCount)}%)
         </span>
         <span>

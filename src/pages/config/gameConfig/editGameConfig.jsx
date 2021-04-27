@@ -55,6 +55,7 @@ const GameConfig = ({
   }, [id, apps]);
 
   let abGroupNode = [];
+  console.log(1111111, abGroupControlDataKey);
   abGroupControlDatas.forEach((item) => {
     let name = `${item.abGroupName}#${item.abGroupValue}`;
     abGroupNode.push(
@@ -73,16 +74,37 @@ const GameConfig = ({
             </Button>
           </Col>
         </Row>
-        ,
         <Row className={style.item}>
           <Col {...noBabelCol}>
             <Row>
-              <Col span="4">
+              <Col span="6">
                 <Input
                   value={abGroupControlDataKey[name]}
                   onChange={(e) => {
-                    abGroupControlDataKey[name] = e.target.value;
-                    setAbGroupControlDataKey(abGroupControlDataKey);
+                    let temp = Object.assign({}, abGroupControlDataKey);
+                    let abGroup = abGroupControlDatas.find((ele) => {
+                      return (
+                        ele.abGroupName == item.abGroupName && ele.abGroupValue == item.abGroupValue
+                      );
+                    });
+                    let controlData = JSON.parse(abGroup.controlData);
+                    let newKey = e.target.value;
+                    let oldKey = temp[name];
+                    temp[name] = e.target.value;
+                    controlData[newKey] = controlData[oldKey];
+                    delete controlData[oldKey];
+                    setAbGroupControlDataKey(temp);
+                    let newAbGroups = abGroupControlDatas.concat();
+                    newAbGroups.map((ele) => {
+                      if (
+                        ele.abGroupName == item.abGroupName &&
+                        ele.abGroupValue == item.abGroupValue
+                      ) {
+                        ele.controlData = JSON.stringify(controlData);
+                      }
+                    });
+
+                    setAbGroupControlDatas(newAbGroups);
                   }}
                 />
               </Col>
@@ -190,42 +212,37 @@ const GameConfig = ({
 
   const readFile = (evt, abGroupName, abGroupValue) => {
     let file = evt.target.files[0];
-    let fileNode = evt.target;
     let isUpdateABControlData = !!abGroupName;
     if (file) {
       let curControlData = null;
-      let key = null;
+      let key = file.name.split('.')[0];
       if (isUpdateABControlData) {
-        key = abGroupControlDataKey[`${abGroupName}#${abGroupValue}`];
+        abGroupControlDataKey[`${abGroupName}#${abGroupValue}`] = key;
+        setAbGroupControlDataKey(abGroupControlDataKey);
         let abGroup = abGroupControlDatas.find((item) => {
           return item.abGroupName === abGroupName && item.abGroupValue === abGroupValue;
         });
         curControlData = abGroup.controlData;
       } else {
         curControlData = controlData;
-        key = controlDataKey;
+        setControlDataKey(key);
       }
 
       // curControlData = curControlData.replace(/\n/g, '\\n').replace(/\r/g, '\\r');
       let updateControlData = curControlData ? JSON.parse(curControlData) : {};
       let fileReader = new FileReader();
       fileReader.onloadend = function (event) {
-        if (key) {
-          updateControlData[key] = event.target.result;
-          if (isUpdateABControlData) {
-            let newAbControlData = abGroupControlDatas.map((item) => {
-              if (item.abGroupName === abGroupName && item.abGroupValue === abGroupValue) {
-                item.controlData = JSON.stringify(updateControlData);
-              }
-              return item;
-            });
-            setAbGroupControlDatas(newAbControlData);
-          } else {
-            setControlData(JSON.stringify(updateControlData));
-          }
+        updateControlData[key] = event.target.result;
+        if (isUpdateABControlData) {
+          let newAbControlData = abGroupControlDatas.map((item) => {
+            if (item.abGroupName === abGroupName && item.abGroupValue === abGroupValue) {
+              item.controlData = JSON.stringify(updateControlData);
+            }
+            return item;
+          });
+          setAbGroupControlDatas(newAbControlData);
         } else {
-          message.error('请先输入文件KEY值');
-          fileNode.value = null;
+          setControlData(JSON.stringify(updateControlData));
         }
       };
       fileReader.readAsText(file);
@@ -352,8 +369,18 @@ const GameConfig = ({
         <Row className={style.item}>
           <Col {...noBabelCol}>
             <Row>
-              <Col span="4">
-                <Input value={controlDataKey} onChange={(e) => setControlDataKey(e.target.value)} />
+              <Col span="6">
+                <Input
+                  value={controlDataKey}
+                  onChange={(e) => {
+                    let temp = Object.assign({}, JSON.parse(controlData));
+                    let newKey = e.target.value;
+                    temp[newKey] = temp[controlDataKey];
+                    delete temp[controlDataKey];
+                    setControlDataKey(newKey);
+                    setControlData(JSON.stringify(temp));
+                  }}
+                />
               </Col>
               <Col span="12" offset="1">
                 <input

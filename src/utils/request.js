@@ -67,6 +67,12 @@ request.use(
     };
     Object.assign(ctx.req.options.headers, headers);
     await next();
+    if (ctx.res && (ctx.res.code != 200 || !ctx.res.isSuccessful)) {
+      notification.error({
+        description: `请稍后重试！`,
+        message: '网络请求失败',
+      });
+    }
     if (ctx.res && ctx.res.code === 401) {
       notification.error({
         description: `${ctx.res.message},请重新登录`,
