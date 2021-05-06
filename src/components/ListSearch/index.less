@@ -1,5 +1,6 @@
 @containerPadding: 24px;
 @fontSize: 16px;
+@itemMargin: 10px;
 
 .container {
   display: flex;
@@ -9,11 +10,19 @@
   border-bottom: 1px solid #f0f0f0;
 
   .filters {
-    flex: 1;
+    display: flex;
+    justify-content: space-between;
+
+    .filter_item:nth-child(n + 2) {
+      margin-left: @itemMargin;
+    }
   }
 
   .toolbars {
-    flex: 1;
-    text-align: right;
+    margin-left: auto;
+  }
+
+  .filter_item:nth-child(n + 2) {
+    margin-right: @itemMargin;
   }
 }

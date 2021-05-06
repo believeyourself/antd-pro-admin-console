@@ -42,6 +42,7 @@ const GameConfig = (props) => {
       keyType: 'games',
       name: newGame.name,
       value: `${newGame.id}#${newGame.platform}`,
+      didabuId: newGame.didabuId,
     };
     setLoading(true);
     await addGame(data);
@@ -90,7 +91,6 @@ const GameConfig = (props) => {
           <Form.Item
             name="id"
             label="ID"
-            required
             rules={[
               {
                 required: true,
@@ -103,7 +103,6 @@ const GameConfig = (props) => {
           <Form.Item
             name="platform"
             label="平台"
-            required
             rules={[
               {
                 required: true,
@@ -119,7 +118,6 @@ const GameConfig = (props) => {
           <Form.Item
             name="name"
             label="名称"
-            required
             rules={[
               {
                 required: true,
@@ -127,6 +125,9 @@ const GameConfig = (props) => {
               },
             ]}
           >
+            <Input />
+          </Form.Item>
+          <Form.Item name="didabuId" label="didabuId">
             <Input />
           </Form.Item>
           <div>

@@ -12,4 +12,26 @@ export default {
     { name: '广告', value: 'af_ad' },
     { name: '运营商', value: 'carrier' },
   ],
+  channels: [
+    {
+      name: 'APPLOVIN',
+      value: 'APPLOVIN_NETWORK',
+    },
+    {
+      name: 'CHARTBOOST',
+      value: 'CHARTBOOST_NETWORK',
+    },
+    {
+      name: 'IRONSOURCE',
+      value: 'IRONSOURCE_NETWORK',
+    },
+    {
+      name: 'UNITY',
+      value: 'UNITY_NETWORK',
+    },
+    {
+      name: 'FACEBOOK',
+      value: 'FACEBOOK_NETWORK',
+    },
+  ],
 };

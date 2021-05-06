@@ -6,9 +6,10 @@ const UsersModel = {
     adCount: {},
   },
   effects: {
-    *queryAdCount({ appId, date, gameType }, { call, put }) {
+    *queryAdCount({ appId, date, gameType, channel }, { call, put }) {
+      console.log(111, appId, date, gameType, channel);
       let [{ data: adCount }, { data: activeRecords }] = yield [
-        call(queryAdCount, appId, date),
+        call(queryAdCount, appId, date, channel),
         call(queryRoiReport, {
           app_id: gameType,
           current_date: date,
@@ -17,13 +18,13 @@ const UsersModel = {
           lastItemKey: '',
         }),
       ];
-
+      console.log(222);
       let active = activeRecords.records[0] || {};
       adCount.activeCount = active.live_count || 0;
       yield put({
         type: 'adCountRefresh',
         adCount: {
-          [`${appId}_${date}`]: adCount,
+          [`${appId}_${date}_${channel}`]: adCount,
         },
       });
     },

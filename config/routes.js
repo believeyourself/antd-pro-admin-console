@@ -85,11 +85,11 @@ export default [
             icon: 'User',
             // authority: ['admin', 'operator'],
             routes: [
-              // {
-              //   path: '/users/userList',
-              //   name: '玩家查询',
-              //   component: './users/userList',
-              // },
+              {
+                path: '/users/userList',
+                name: '玩家查询',
+                component: './users/userList',
+              },
               {
                 path: '/users/adCount',
                 name: '广告次数',
