@@ -49,23 +49,94 @@ class ABGroup extends React.Component {
   }
 
   render() {
+    const { loading, data, date } = this.state;
+    const abFilters = new Set();
+    data.forEach((item) => {
+      abFilters.add(item.ab_group);
+    });
+    const columns = [
+      {
+        key: 'key',
+        title: 'AB分组',
+        dataIndex: 'ab_group',
+        filters: Array.from(abFilters).map((item) => {
+          return { text: item, value: item };
+        }),
+        onFilter(ab_group, row) {
+          console.log(ab_group, row);
+          return ab_group === row.ab_group;
+        },
+      },
+      {
+        title: '用户来源',
+        dataIndex: 'organic',
+        render(text, data, index) {
+          return ['非自然', '自然'][text];
+        },
+        filters: [
+          { text: '自然', value: 1 },
+          { text: '非自然', value: 0 },
+        ],
+        onFilter(value, record) {
+          return record.organic === value;
+        },
+      },
+      {
+        title: '留存日期',
+        dataIndex: 'retention_date',
+        render(text) {
+          return dayjs.utc(text).format('YYYY-MM-DD');
+        },
+      },
+      // {
+      //   title: '注册人数',
+      //   dataIndex: 'register',
+      // },
+      // {
+      //   title: '留存人数',
+      //   dataIndex: 'retention',
+      // },
+      // {
+      //   title: '留存(%)',
+      //   dataIndex: 'retention',
+      //   render(text, row, index) {
+      //     return getPercent(text, row.register);
+      //   },
+      // },
+      {
+        title: '广告次数',
+        dataIndex: 'ad_count',
+      },
+      {
+        title: '收益',
+        dataIndex: 'revenue',
+      },
+      {
+        title: 'ecpm',
+        render(text, rowData, index) {
+          let { revenue, ad_count } = rowData;
+          if (ad_count <= 0) {
+            return '--';
+          }
+          return ((revenue / ad_count) * 1000).toFixed(3);
+        },
+      },
+    ];
+
     return (
       <PageContainer>
         <ListSearch
           filters={[
             <div key="date">
               注册日期：
-              <DatePicker
-                value={this.state.date}
-                onChange={(date, formatStr) => this.setState({ date })}
-              />
+              <DatePicker value={date} onChange={(date, formatStr) => this.setState({ date })} />
             </div>,
           ]}
           toolbars={[
             <Button
               key="search"
               onClick={this.queryStatisticData}
-              loading={this.state.loading}
+              loading={loading}
               icon={<SearchOutlined />}
               type="primary"
             >
@@ -73,78 +144,10 @@ class ABGroup extends React.Component {
             </Button>,
           ]}
         />
-        <Table
-          loading={this.state.loading}
-          bordered
-          columns={columns}
-          dataSource={this.state.data}
-        ></Table>
+        <Table loading={loading} bordered columns={columns} dataSource={data}></Table>
       </PageContainer>
     );
   }
 }
-
-const columns = [
-  {
-    key: 'key',
-    title: 'AB分组',
-    dataIndex: 'ab_group',
-  },
-  {
-    title: '用户来源',
-    dataIndex: 'organic',
-    render(text, data, index) {
-      return ['非自然', '自然'][text];
-    },
-    filterMultiple: false,
-    filters: [
-      { text: '自然', value: 1 },
-      { text: '非自然', value: 0 },
-    ],
-    onFilter(value, record) {
-      return record.organic === value;
-    },
-  },
-  {
-    title: '留存日期',
-    dataIndex: 'retention_date',
-    render(text) {
-      return dayjs.utc(text).format('YYYY-MM-DD');
-    },
-  },
-  // {
-  //   title: '注册人数',
-  //   dataIndex: 'register',
-  // },
-  // {
-  //   title: '留存人数',
-  //   dataIndex: 'retention',
-  // },
-  // {
-  //   title: '留存(%)',
-  //   dataIndex: 'retention',
-  //   render(text, row, index) {
-  //     return getPercent(text, row.register);
-  //   },
-  // },
-  {
-    title: '广告次数',
-    dataIndex: 'ad_count',
-  },
-  {
-    title: '收益',
-    dataIndex: 'revenue',
-  },
-  {
-    title: 'ecpm',
-    render(text, rowData, index) {
-      let { revenue, ad_count } = rowData;
-      if (ad_count <= 0) {
-        return '--';
-      }
-      return ((revenue / ad_count) * 1000).toFixed(3);
-    },
-  },
-];
 
 export default ABGroup;
