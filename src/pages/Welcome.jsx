@@ -3,7 +3,7 @@ import { connect } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Card, Skeleton, Row, Col, Button } from 'antd';
 import DatePicker from '@/components/DatePicker';
-import { dayjs } from '@/utils/utils';
+import { dayjs, getPercent, division } from '@/utils/utils';
 import style from './welcome.less';
 
 class Home extends React.Component {
@@ -51,7 +51,8 @@ class Home extends React.Component {
 
   render() {
     const yesterday = dayjs.utc().subtract(1, 'd');
-    const { loading, games, adCount = [] } = this.props;
+    const { loading, games, adCount = [], gameReports = [] } = this.props;
+
     let adCountNodes = games.map((game) => {
       let temp = adCount.find((item) => {
         return game.didabuId == item.app_id;
@@ -63,6 +64,25 @@ class Home extends React.Component {
             <a onClick={() => this.handleAdCountDetail(game.value)}>{temp?.userCount || 0}</a> 人
           </Col>
         </Row>
+      );
+    });
+
+    let dailyReports = gameReports.map((game) => {
+      return (
+        <Col {...cardCol}>
+          <Card className={style.card} key={game.app_id} title={game.name}>
+            <Skeleton loading={loading} active>
+              <div className={style.content}>
+                <p>买量：{game.roi[0]?.non_organic_count}</p>
+                <p>买量广告：{division(game.roi[0]?.total_ad_count_non_oganic, game.roi[0]?.non_organic_count)}</p>
+                <p>买量次留：{getPercent(game.retention[0]?.non_organic_retention_count, game.roi[0]?.non_organic_count)}</p>
+                <p>日活：{game.active[0]?.live_count}</p>
+                <p>日活广告：{division(game.active[0]?.live_ad_count, game.active[0]?.live_count)}</p>
+                <p>日活收入：--</p>
+              </div>
+            </Skeleton>
+          </Card>
+        </Col>
       );
     });
 
@@ -80,6 +100,10 @@ class Home extends React.Component {
             查询
           </Button>
         </div>
+        <Row gutter={10}>
+          {dailyReports}
+        </Row>
+        <br />
         <Row gutter={10}>
           <Col {...cardCol}>
             <Card title="广告次数超60次人数">
@@ -108,6 +132,7 @@ const mapStateToProps = ({ global, loading, home }, ownProps) => {
   return {
     games,
     adCount: home.adCount,
+    gameReports: home.gameReports,
     loading: loading.effects['home/init'],
   };
 };

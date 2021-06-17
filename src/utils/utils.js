@@ -16,6 +16,14 @@ export const getPercent = (a, b, fixedCount = 2) => {
   return ((a / b) * 100).toFixed(fixedCount);
 };
 
+export const division = (a, b, fixedCount = 2) => {
+  if (isNaN(a) || isNaN(b) || b == 0) {
+    return '--';
+  }
+
+  return (a / b).toFixed(fixedCount);
+}
+
 export function download(filename, text) {
   let pom = document.createElement('a');
   pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));

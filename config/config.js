@@ -23,7 +23,6 @@ export default defineConfig({
   },
   // devtool: process.env.NODE_ENV === 'production' ? false : 'source-map',
   externals: {
-    bizcharts: 'BizCharts',
     react: 'React',
     'react-dom': 'ReactDOM',
   },
@@ -32,12 +31,10 @@ export default defineConfig({
       ? [
           'https://gw.alipayobjects.com/os/lib/react/16.8.6/umd/react.development.js',
           'https://gw.alipayobjects.com/os/lib/react-dom/16.8.6/umd/react-dom.development.js',
-          'https://g.alicdn.com/code/lib/bizcharts/4.0.14/BizCharts.js',
         ]
       : [
           'https://gw.alipayobjects.com/os/lib/react/16.8.6/umd/react.production.min.js',
           'https://gw.alipayobjects.com/os/lib/react-dom/16.8.6/umd/react-dom.production.min.js',
-          'https://g.alicdn.com/code/lib/bizcharts/4.0.14/BizCharts.js',
         ],
   targets: {
     ie: 11,

@@ -72,6 +72,7 @@ request.use(
         description: `请稍后重试！`,
         message: '网络请求失败',
       });
+      ctx.res.data = {};
     }
     if (ctx.res && ctx.res.code === 401) {
       notification.error({

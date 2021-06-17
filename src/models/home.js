@@ -1,4 +1,5 @@
 import { query } from '@/services/home';
+import { result } from 'lodash';
 
 export default {
   namespace: 'home',
@@ -13,8 +14,8 @@ export default {
     },
   },
   reducers: {
-    refresh(state, action) {
-      return { ...state, ...action.data };
+    refresh(state, { data }) {
+      return { ...state, adCount: data.adCount, gameReports: data.games };
     },
   },
 };

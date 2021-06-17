@@ -42,9 +42,6 @@ const columns = [
     title: '游戏',
     dataIndex: 'app_name',
     search: false,
-    render: (dom, entity) => {
-      return <a onClick={() => setRow(entity)}>{dom}</a>;
-    },
   },
   {
     title: 'appsflyer_id',
