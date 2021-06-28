@@ -5,7 +5,16 @@ import { Card, Skeleton, Row, Col, Button } from 'antd';
 import DatePicker from '@/components/DatePicker';
 import { dayjs, getPercent, division } from '@/utils/utils';
 import style from './welcome.less';
+import { autobind } from 'core-decorators';
 
+const cardCol = {
+  xs: { span: 24 },
+  sm: { span: 24 },
+  md: { span: 8 },
+  lg: { span: 8 },
+};
+
+@autobind
 class Home extends React.Component {
   constructor(props) {
     super(props);
@@ -13,9 +22,6 @@ class Home extends React.Component {
       date: dayjs.utc().subtract(1, 'd'),
       isReady: false,
     };
-    this.handleDate = this.handleDate.bind(this);
-    this.handleSearch = this.handleSearch.bind(this);
-    this.handleAdCountDetail = this.handleAdCountDetail.bind(this);
   }
 
   handleDate(date) {
@@ -37,8 +43,8 @@ class Home extends React.Component {
     window.location.hash = `/users/exceptionAdUsers`;
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.games.length != this.props.games.length && this.props.games.length > 0) {
+  componentDidUpdate(prevProps) {
+    if (prevProps.games.length !== this.props.games.length && this.props.games.length > 0) {
       this.handleSearch();
     }
   }
@@ -53,32 +59,60 @@ class Home extends React.Component {
     const yesterday = dayjs.utc().subtract(1, 'd');
     const { loading, games, adCount = [], gameReports = [] } = this.props;
 
-    let adCountNodes = games.map((game) => {
-      let temp = adCount.find((item) => {
-        return game.didabuId == item.app_id;
+    const adCountNodes = games.map((game) => {
+      const temp = adCount.find((item) => {
+        return game.didabuId === item.app_id;
       });
       return (
         <Row key={game.didabuId} className={style.flex_container}>
           <Col flex={1}>{game.name}：</Col>
           <Col className={style.right_text} flex={1}>
-            <a onClick={() => this.handleAdCountDetail(game.value)}>{temp?.userCount || 0}</a> 人
+            <a onClick={() => this.handleAdCountDetail(game.value)}>{temp?.userCount || 0}</a>
           </Col>
         </Row>
       );
     });
 
-    let dailyReports = gameReports.map((game) => {
+    const dailyReports = gameReports.map((game) => {
       return (
-        <Col {...cardCol}>
+        <Col key={game.app_id} {...cardCol}>
           <Card className={style.card} key={game.app_id} title={game.name}>
             <Skeleton loading={loading} active>
               <div className={style.content}>
-                <p>买量：{game.roi[0]?.non_organic_count}</p>
-                <p>买量广告：{division(game.roi[0]?.total_ad_count_non_oganic, game.roi[0]?.non_organic_count)}</p>
-                <p>买量次留：{getPercent(game.retention[0]?.non_organic_retention_count, game.roi[0]?.non_organic_count)}</p>
-                <p>日活：{game.active[0]?.live_count}</p>
-                <p>日活广告：{division(game.active[0]?.live_ad_count, game.active[0]?.live_count)}</p>
-                <p>日活收入：--</p>
+                <div>
+                  <span>买量：</span>
+                  <span>{game.roi[0]?.non_organic_count}</span>
+                </div>
+                <div>
+                  <span>日活：</span>
+                  <span>{game.active[0]?.live_count}</span>
+                </div>
+                <div>
+                  <span>买量广告：</span>
+                  <span>
+                    {division(
+                      game.roi[0]?.total_ad_count_non_oganic,
+                      game.roi[0]?.non_organic_count,
+                    )}
+                  </span>
+                </div>
+                <div>
+                  <span>日活广告：</span>
+                  <span>{division(game.active[0]?.live_ad_count, game.active[0]?.live_count)}</span>
+                </div>
+                <div>
+                  <span>买量次留：</span>
+                  <span>
+                    {getPercent(
+                      game.retention[0]?.non_organic_retention_count,
+                      game.roi[0]?.non_organic_count,
+                    )}
+                  </span>
+                </div>
+                <div>
+                  <span>日活收入：</span>
+                  <span>--</span>
+                </div>
               </div>
             </Skeleton>
           </Card>
@@ -100,9 +134,7 @@ class Home extends React.Component {
             查询
           </Button>
         </div>
-        <Row gutter={10}>
-          {dailyReports}
-        </Row>
+        <Row gutter={10}>{dailyReports}</Row>
         <br />
         <Row gutter={10}>
           <Col {...cardCol}>
@@ -118,15 +150,8 @@ class Home extends React.Component {
   }
 }
 
-const cardCol = {
-  xs: { span: 24 },
-  sm: { span: 24 },
-  md: { span: 8 },
-  lg: { span: 8 },
-};
-
-const mapStateToProps = ({ global, loading, home }, ownProps) => {
-  let games = global.games.filter((game) => {
+const mapStateToProps = ({ global, loading, home }) => {
+  const games = global.games.filter((game) => {
     return !!game.didabuId;
   });
   return {
